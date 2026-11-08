@@ -15,8 +15,11 @@ La API NestJS (`apps/api`) sigue en el repositorio como opción, pero la app no 
 
 ## 1. GitHub: publicar los datos
 
-> **Estado (8 nov 2026):** hecho en https://github.com/borjeta/appPuntosCarga. Datos publicados en
-> https://borjeta.github.io/appPuntosCarga/manifest.json y la app los usa por defecto.
+> **Estado (8 nov 2026): todo en marcha.**
+> - GitHub: https://github.com/borjeta/appPuntosCarga, datos en
+>   https://borjeta.github.io/appPuntosCarga/manifest.json (la app los usa por defecto).
+> - Supabase: proyecto `mfbauxiyuqpfvmydedhk` con la migración aplicada, inicio de sesión anónimo
+>   activado y las 15 comprobaciones de `rls-check.mjs` superadas (la app lo usa por defecto).
 
 1. Crea un repositorio **público** en GitHub y sube el proyecto (`git push`).
    - Público porque GitHub Pages y los minutos de Actions son gratis e ilimitados en repos públicos.
