@@ -5,11 +5,16 @@
   "description": "Formato de datos estático y motor de consultas en el dispositivo (mapa, cercanía, búsqueda, fichas)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "react-native": "src/index.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -p tsconfig.test.json --noEmit",
     "test": "vitest run"
   },
-  "dependencies": { "@pc/shared": "*" }
+  "dependencies": {
+    "@pc/shared": "*"
+  }
 }

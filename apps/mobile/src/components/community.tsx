@@ -8,10 +8,10 @@ import {
 } from '@pc/shared';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { backend } from '../lib/backend';
 import { useAppStore } from '../lib/store';
-import { radius, spacing, useTheme } from '../lib/theme';
+import { spacing, useTheme } from '../lib/theme';
 import { Button, Card, Chip, Section, T } from './ui';
 
 /** Con menos avisos el porcentaje engaña (un solo «funciona» daría 67 %). */
@@ -37,19 +37,18 @@ export function CommunitySection({ location }: { location: LocationDetail }) {
   const deviceId = useAppStore((s) => s.deviceId);
   const [formOpen, setFormOpen] = useState(false);
   const [type, setType] = useState<ReportType>('BROKEN');
-  const [comment, setComment] = useState('');
   const [sent, setSent] = useState(false);
 
   const send = useMutation({
-    mutationFn: (v: { type: ReportType; comment?: string }) =>
-      backend.report(location.id, deviceId, v.type, v.comment),
+    // Versión 1 sin comentarios libres: solo avisos predefinidos (no hay contenido de usuarios que
+    // moderar; norma 1.2 de la App Store). La base de datos ya admite comentarios para el futuro.
+    mutationFn: (v: { type: ReportType }) => backend.report(location.id, deviceId, v.type),
     onSuccess: (summary: CommunitySummary) => {
       queryClient.setQueryData<LocationDetail>(['location', location.id], (old) =>
         old ? { ...old, community: summary } : old,
       );
       setSent(true);
       setFormOpen(false);
-      setComment('');
     },
   });
 
@@ -101,7 +100,6 @@ export function CommunitySection({ location }: { location: LocationDetail }) {
                     · {d === 0 ? t('community.today') : t('community.daysAgo', { count: d })}
                   </T>
                 </T>
-                {r.comment ? <T variant="small">{r.comment}</T> : null}
               </View>
             </View>
           );
@@ -130,22 +128,10 @@ export function CommunitySection({ location }: { location: LocationDetail }) {
                 />
               ))}
             </View>
-            <TextInput
-              value={comment}
-              onChangeText={setComment}
-              maxLength={280}
-              multiline
-              placeholder={t('community.commentPlaceholder')}
-              placeholderTextColor={theme.textMuted}
-              style={[
-                styles.input,
-                { color: theme.text, borderColor: theme.border, backgroundColor: theme.bg },
-              ]}
-            />
             <Button
               label={t('community.send')}
               icon="send"
-              onPress={() => send.mutate({ type, comment: comment.trim() || undefined })}
+              onPress={() => send.mutate({ type })}
               style={{ opacity: send.isPending ? 0.5 : 1 }}
             />
           </View>
@@ -178,13 +164,4 @@ const styles = StyleSheet.create({
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   wrap: { flexDirection: 'row', flexWrap: 'wrap' },
-  input: {
-    minHeight: 72,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    marginBottom: spacing.md,
-    fontSize: 15,
-    textAlignVertical: 'top',
-  },
 });

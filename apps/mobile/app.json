@@ -3,22 +3,75 @@
     "name": "Puntos de Carga",
     "slug": "puntos-carga",
     "scheme": "puntoscarga",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
+    "description": "Todos los puntos de recarga públicos de España y Portugal en un solo mapa, con estado en tiempo real, coste estimado para tu coche y planificador de rutas.",
+    "githubUrl": "https://github.com/borjeta/appPuntosCarga",
+    "locales": {
+      "es": "./locales/es.json",
+      "en": "./locales/en.json"
+    },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "app.puntoscarga.dev"
+      "bundleIdentifier": "com.borjeta.puntoscarga",
+      "supportsTablet": false,
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true,
+        "CFBundleDevelopmentRegion": "es"
+      },
+      "privacyManifests": {
+        "NSPrivacyTracking": false,
+        "NSPrivacyTrackingDomains": [],
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "C617.1",
+              "0A2A.1",
+              "3B52.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryDiskSpace",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "E174.1",
+              "85F4.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "35F9.1"
+            ]
+          }
+        ]
+      }
     },
     "android": {
-      "package": "app.puntoscarga.dev",
+      "package": "com.borjeta.puntoscarga",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0B6BCB",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
+      "permissions": [
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ],
+      "blockedPermissions": [
+        "ACCESS_BACKGROUND_LOCATION"
+      ],
       "predictiveBackGestureEnabled": false
     },
     "web": {
@@ -31,7 +84,25 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Usamos tu ubicación solo mientras usas la app, para mostrarte los puntos de recarga cercanos y la distancia hasta ellos."
+          "locationWhenInUsePermission": "Usamos tu ubicación solo mientras usas la app, para mostrarte los puntos de recarga cercanos, la distancia hasta ellos y como origen de tus rutas. No se guarda en ningún servidor.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false,
+          "locationAlwaysAndWhenInUsePermission": false,
+          "locationAlwaysPermission": false,
+          "motionUsagePermission": false,
+          "locationFullAccuracyPermission": false
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "backgroundColor": "#FFFFFF",
+          "dark": {
+            "image": "./assets/splash-icon-dark.png",
+            "backgroundColor": "#0E1013"
+          }
         }
       ]
     ]

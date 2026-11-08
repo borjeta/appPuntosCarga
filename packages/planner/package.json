@@ -5,11 +5,17 @@
   "description": "Planificador de rutas con paradas de carga, común a la app y la API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "react-native": "src/index.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc -b",
     "typecheck": "tsc -p tsconfig.test.json --noEmit",
     "test": "vitest run"
   },
-  "dependencies": { "@pc/pricing": "*", "@pc/shared": "*" }
+  "dependencies": {
+    "@pc/pricing": "*",
+    "@pc/shared": "*"
+  }
 }

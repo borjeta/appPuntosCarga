@@ -44,3 +44,17 @@ ok(!!r.error || (r.data ?? []).length === 0, `borrar avisos rechazado (${r.error
 
 r = await anon.from('community_reports').select('station_id,type,comment,created_at').eq('station_id', st);
 ok(!r.error && r.data.length === 2 && r.data.some((x) => x.comment === 'cargó bien') && !r.data.some((x) => x.comment?.includes('www')), `lectura pública: ${JSON.stringify(r.data)} (el del enlace queda oculto, comentario limpio)`);
+
+// Borrado de cuenta (requisito de la App Store): solo la propia, y se lleva sus avisos.
+r = await anon.rpc('delete_my_account');
+ok(!!r.error, `borrar cuenta sin sesión rechazado (${r.error?.code})`);
+const b = mk();
+await b.auth.signInAnonymously();
+const st2 = 'es:TEST-DEL-' + Date.now();
+await b.from('community_reports').insert({ station_id: st2, type: 'WORKS' });
+r = await b.rpc('delete_my_account');
+ok(!r.error, `borrar mi cuenta (${r.error?.message ?? 'ok'})`);
+r = await anon.from('community_reports').select('station_id').eq('station_id', st2);
+ok(!r.error && r.data.length === 0, `sus avisos desaparecen (${r.data?.length ?? r.error?.message})`);
+const u = await b.auth.getUser();
+ok(!!u.error || !u.data.user, `la sesión deja de ser válida (${u.error?.message ?? 'usuario aún existe'})`);

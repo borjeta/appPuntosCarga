@@ -89,3 +89,18 @@ export async function sendReport(
   }
   return communitySummary(stationId);
 }
+
+/**
+ * Borra la cuenta anónima y todos sus avisos en el servidor (requisito de la App Store y del RGPD).
+ * Si nunca se envió un aviso no hay cuenta que borrar.
+ */
+export async function deleteMyCommunityData(): Promise<void> {
+  if (!supabase) return;
+  const { data } = await supabase.auth.getSession();
+  if (!data.session) return;
+  const { error } = await supabase.rpc('delete_my_account');
+  if (error) throw new CommunityError(error.message);
+  // El servidor responde 403 a este cierre de sesión (el usuario ya no existe); supabase-js lo
+  // ignora y limpia la sesión local, que es lo que importa.
+  await supabase.auth.signOut({ scope: 'local' });
+}

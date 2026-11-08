@@ -40,6 +40,10 @@ export const DATA_URL: string = trim(
 const DEFAULT_SUPABASE_URL = 'https://mfbauxiyuqpfvmydedhk.supabase.co';
 const DEFAULT_SUPABASE_KEY = 'sb_publishable_aXl9VYcVy9ET-StWncIvnA_Ugoo6ttv';
 
+/** Páginas legales publicadas junto a los datos (carpeta web/ del repositorio). */
+export const PRIVACY_URL = `${PUBLISHED_DATA_URL}/privacidad.html`;
+export const SUPPORT_URL = `${PUBLISHED_DATA_URL}/soporte.html`;
+
 export const SUPABASE_URL: string | null =
   process.env.EXPO_PUBLIC_SUPABASE_URL || DEFAULT_SUPABASE_URL;
 export const SUPABASE_KEY: string | null =

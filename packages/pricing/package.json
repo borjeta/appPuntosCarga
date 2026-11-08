@@ -5,6 +5,7 @@
   "description": "Motor puro de estimación de carga: tiempo, energía y coste según vehículo, punto y tarifa",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "react-native": "src/index.ts",
   "files": [
     "dist"
   ],

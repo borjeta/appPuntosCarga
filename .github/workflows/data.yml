@@ -25,6 +25,7 @@ on:
       - 'packages/shared/**'
       - 'packages/dataset/**'
       - 'packages/db/**'
+      - 'web/**'
   workflow_dispatch:
     inputs:
       full:
@@ -104,6 +105,9 @@ jobs:
         run: |
           npm run build:packages
           npm run ingest -w @pc/workers -- export-status --out "$GITHUB_WORKSPACE/site"
+
+      - name: Páginas web (inicio, privacidad, soporte)
+        run: cp -r web/. site/
 
       - uses: actions/upload-pages-artifact@v3
         with:

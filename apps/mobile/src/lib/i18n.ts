@@ -247,6 +247,20 @@ const es = {
     server: 'Datos',
     localMode: 'guardados en el dispositivo (funciona sin conexión)',
     about: 'Acerca de',
+    privacyTitle: 'Privacidad',
+    privacyPolicy: 'Política de privacidad',
+    support: 'Ayuda y contacto',
+    deleteData: 'Borrar mis datos',
+    deleteDataHint:
+      'Borra tus avisos de la comunidad y tu cuenta anónima, y todo lo guardado en este móvil (favoritos, vehículos, filtros).',
+    deleteConfirmTitle: '¿Borrar todos tus datos?',
+    deleteConfirmBody:
+      'Se borrarán tus avisos, tu cuenta anónima y lo guardado en este móvil. No se puede deshacer.',
+    deleteConfirm: 'Borrar',
+    cancel: 'Cancelar',
+    deleted: 'Datos borrados.',
+    deleteError:
+      'No se pudieron borrar los datos del servidor: {{message}}. Inténtalo con conexión.',
     version: 'Versión {{version}}',
     privacy:
       'Tu ubicación solo se usa en el dispositivo para buscar estaciones cercanas; no se guarda en ningún servidor. Los favoritos se guardan solo en este dispositivo.',
@@ -508,6 +522,19 @@ const en: Dict = {
     server: 'Data',
     localMode: 'stored on the device (works offline)',
     about: 'About',
+    privacyTitle: 'Privacy',
+    privacyPolicy: 'Privacy policy',
+    support: 'Help and contact',
+    deleteData: 'Delete my data',
+    deleteDataHint:
+      'Deletes your community reports and anonymous account, and everything stored on this phone (favourites, vehicles, filters).',
+    deleteConfirmTitle: 'Delete all your data?',
+    deleteConfirmBody:
+      'Your reports, your anonymous account and everything stored on this phone will be deleted. This cannot be undone.',
+    deleteConfirm: 'Delete',
+    cancel: 'Cancel',
+    deleted: 'Data deleted.',
+    deleteError: 'Could not delete your data on the server: {{message}}. Try again when online.',
     version: 'Version {{version}}',
     privacy:
       'Your location is only used on this device to find nearby stations; it is never stored on a server. Favourites stay on this device.',

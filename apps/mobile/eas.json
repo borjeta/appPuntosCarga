@@ -1,0 +1,29 @@
+{
+  "cli": {
+    "version": ">= 16.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "production": {
+      "autoIncrement": true
+    },
+    "preview": {
+      "extends": "production",
+      "autoIncrement": false,
+      "distribution": "internal"
+    },
+    "development": {
+      "extends": "production",
+      "autoIncrement": false,
+      "developmentClient": true,
+      "distribution": "internal"
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "ascAppId": "RELLENAR_CON_EL_APPLE_ID_DE_LA_APP"
+      }
+    }
+  }
+}

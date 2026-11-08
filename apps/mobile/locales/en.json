@@ -1,0 +1,9 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Charging Points",
+    "NSLocationWhenInUseUsageDescription": "Your location is only used while you use the app, to show nearby charging points, the distance to them and as the starting point of your trips. It is never stored on a server."
+  },
+  "android": {
+    "app_name": "Charging Points"
+  }
+}

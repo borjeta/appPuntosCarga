@@ -40,6 +40,9 @@ interface AppState {
   /** Id anónimo del dispositivo para los avisos de la comunidad (el servidor solo guarda su hash). */
   deviceId: string;
 
+  /** Borra todo lo guardado en el dispositivo (favoritos, vehículos, filtros, preferencias). */
+  resetAll: () => void;
+
   theme: ThemePreference;
   setTheme: (t: ThemePreference) => void;
   language: LanguagePreference;
@@ -95,6 +98,17 @@ export const useAppStore = create<AppState>()(
       setChargeWindow: (chargeWindow) => set({ chargeWindow }),
 
       deviceId: randomUUID(),
+      resetAll: () =>
+        set({
+          filters: {},
+          favorites: [],
+          vehicles: [],
+          activeVehicleId: null,
+          chargeWindow: { from: 20, to: 80 },
+          deviceId: randomUUID(),
+          theme: 'system',
+          language: 'system',
+        }),
 
       theme: 'system',
       setTheme: (theme) => set({ theme }),

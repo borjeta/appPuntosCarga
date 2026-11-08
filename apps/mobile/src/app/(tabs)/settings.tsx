@@ -1,11 +1,15 @@
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { Card, Chip, Section, T } from '../../components/ui';
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Card, Chip, Section, T, type IconName } from '../../components/ui';
 import { BACKEND_MODE } from '../../lib/backend';
-import { DATA_ORIGIN } from '../../lib/config';
+import { DATA_ORIGIN, PRIVACY_URL, SUPPORT_URL } from '../../lib/config';
+import { openWebsite } from '../../lib/links';
+import { deleteMyCommunityData } from '../../lib/supabase';
 import {
   useActiveVehicle,
   useAppStore,
@@ -20,6 +24,51 @@ export default function SettingsScreen() {
   const theme = useTheme();
   const { theme: themePref, setTheme, language, setLanguage } = useAppStore();
   const vehicle = useActiveVehicle();
+  const resetAll = useAppStore((s) => s.resetAll);
+  const queryClient = useQueryClient();
+  const [deleteState, setDeleteState] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const doDelete = async () => {
+    try {
+      await deleteMyCommunityData();
+      resetAll();
+      queryClient.clear();
+      setDeleteState({ ok: true, text: t('settings.deleted') });
+    } catch (err) {
+      setDeleteState({
+        ok: false,
+        text: t('settings.deleteError', { message: (err as Error).message }),
+      });
+    }
+  };
+
+  const confirmDelete = () => {
+    if (Platform.OS === 'web') {
+      void doDelete();
+      return;
+    }
+    Alert.alert(t('settings.deleteConfirmTitle'), t('settings.deleteConfirmBody'), [
+      { text: t('settings.cancel'), style: 'cancel' },
+      { text: t('settings.deleteConfirm'), style: 'destructive', onPress: () => void doDelete() },
+    ]);
+  };
+
+  const row = (icon: IconName, label: string, onPress: () => void, danger = false) => (
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      style={[
+        styles.link,
+        { backgroundColor: theme.surface, borderColor: theme.border, marginBottom: spacing.sm },
+      ]}
+    >
+      <Ionicons name={icon} size={20} color={danger ? theme.danger : theme.primary} />
+      <T style={{ flex: 1, marginLeft: spacing.md, color: danger ? theme.danger : theme.text }}>
+        {label}
+      </T>
+      <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
+    </Pressable>
+  );
 
   return (
     <ScrollView contentContainerStyle={{ padding: spacing.lg, paddingBottom: 48 }}>
@@ -77,6 +126,28 @@ export default function SettingsScreen() {
           {t('settings.server')}: {DATA_ORIGIN}
           {BACKEND_MODE === 'local' ? ` · ${t('settings.localMode')}` : ''}
         </T>
+      </Section>
+
+      <Section title={t('settings.privacyTitle')}>
+        {row('shield-checkmark-outline', t('settings.privacyPolicy'), () =>
+          openWebsite(PRIVACY_URL),
+        )}
+        {row('help-buoy-outline', t('settings.support'), () => openWebsite(SUPPORT_URL))}
+        {row('trash-outline', t('settings.deleteData'), confirmDelete, true)}
+        <T muted variant="small">
+          {t('settings.deleteDataHint')}
+        </T>
+        {deleteState ? (
+          <T
+            variant="small"
+            style={{
+              marginTop: spacing.sm,
+              color: deleteState.ok ? theme.status.AVAILABLE : theme.danger,
+            }}
+          >
+            {deleteState.text}
+          </T>
+        ) : null}
       </Section>
 
       <Section title={t('settings.about')}>
