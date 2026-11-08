@@ -1,7 +1,8 @@
 # Publica los datos de la app (estaciones, vehículos y estado en tiempo real) en GitHub Pages.
 #
 #  · Cada 15 min refresca el estado en tiempo real (status.json, ~80 KB comprimido).
-#  · Si los datos publicados tienen más de 20 h (o se lanza a mano con "completa"), hace la
+#  · Si los datos publicados tienen más de 20 h, si se lanza a mano con "completa" o si cambia el
+#    código de ingesta (push), hace la
 #    ingesta completa con un PostGIS temporal dentro de la propia máquina de GitHub.
 #
 # Requisitos (ver README → "Publicar sin servidor"):
@@ -15,6 +16,15 @@ name: Datos
 on:
   schedule:
     - cron: '*/15 * * * *'
+  # Republica (ingesta completa) cuando cambia el código que genera los datos.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/data.yml'
+      - 'apps/workers/**'
+      - 'packages/shared/**'
+      - 'packages/dataset/**'
+      - 'packages/db/**'
   workflow_dispatch:
     inputs:
       full:
@@ -63,7 +73,7 @@ jobs:
         id: mode
         env:
           SITE: ${{ steps.pages.outputs.base_url }}
-          FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.full }}
+          FORCE_FULL: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full) }}
         run: |
           mkdir -p site
           full=true
