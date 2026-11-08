@@ -1,0 +1,19 @@
+{
+  "name": "@pc/pricing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Motor puro de estimación de carga: tiempo, energía y coste según vehículo, punto y tarifa",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pc/shared": "*"
+  }
+}

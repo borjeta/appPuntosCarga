@@ -1,0 +1,20 @@
+{
+  "name": "@pc/workers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ingesta de fuentes de datos de puntos de recarga: descarga, normalización, deduplicación y carga en PostGIS",
+  "scripts": {
+    "ingest": "tsx src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pc/db": "*",
+    "@pc/shared": "*",
+    "saxes": "^6.0.0",
+    "@pc/dataset": "*"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15"
+  }
+}

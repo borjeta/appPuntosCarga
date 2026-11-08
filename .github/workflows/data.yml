@@ -1,0 +1,110 @@
+# Publica los datos de la app (estaciones, vehículos y estado en tiempo real) en GitHub Pages.
+#
+#  · Cada 15 min refresca el estado en tiempo real (status.json, ~80 KB comprimido).
+#  · Si los datos publicados tienen más de 20 h (o se lanza a mano con "completa"), hace la
+#    ingesta completa con un PostGIS temporal dentro de la propia máquina de GitHub.
+#
+# Requisitos (ver README → "Publicar sin servidor"):
+#  · Settings → Pages → Source: "GitHub Actions".
+#  · Repositorio público (Pages y minutos de Actions gratis). Con repositorio privado, cambia el
+#    cron a cada hora o menos para no agotar los 2.000 minutos/mes del plan gratuito.
+#  · GitHub desactiva los workflows programados tras 60 días sin actividad en el repositorio.
+
+name: Datos
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Ingesta completa (estaciones y vehículos), no solo el estado'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: data-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    services:
+      db:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_USER: pc
+          POSTGRES_PASSWORD: pc_dev_password
+          POSTGRES_DB: puntos_carga
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U pc -d puntos_carga"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DATABASE_URL: postgres://pc:pc_dev_password@localhost:5433/puntos_carga
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: pages
+        uses: actions/configure-pages@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: ¿Ingesta completa o solo estado?
+        id: mode
+        env:
+          SITE: ${{ steps.pages.outputs.base_url }}
+          FORCE_FULL: ${{ github.event_name == 'workflow_dispatch' && inputs.full }}
+        run: |
+          mkdir -p site
+          full=true
+          if [ "$FORCE_FULL" != "true" ] && curl -sf "$SITE/manifest.json" -o site/manifest.json; then
+            generated=$(node -e "console.log(require('./site/manifest.json').files.stations.generatedAt)")
+            age=$(( $(date +%s) - $(date -d "$generated" +%s) ))
+            echo "Estaciones publicadas hace $((age / 3600)) h"
+            if [ "$age" -lt 72000 ]; then
+              curl -sf "$SITE/stations.json" -o site/stations.json && \
+              curl -sf "$SITE/vehicles.json" -o site/vehicles.json && full=false
+            fi
+          fi
+          echo "full=$full" >> "$GITHUB_OUTPUT"
+          echo "Modo: $([ "$full" = true ] && echo 'ingesta completa' || echo 'solo estado')"
+
+      - run: npm ci
+
+      - name: Ingesta completa y exportación
+        if: steps.mode.outputs.full == 'true'
+        run: |
+          npm run db:migrate
+          npm run ingest -- sites all
+          npm run ingest -- vehicles
+          npm run ingest -- export --out "$GITHUB_WORKSPACE/site"
+
+      - name: Solo estado en tiempo real
+        if: steps.mode.outputs.full != 'true'
+        run: |
+          npm run build:packages
+          npm run ingest -w @pc/workers -- export-status --out "$GITHUB_WORKSPACE/site"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

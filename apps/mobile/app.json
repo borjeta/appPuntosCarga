@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Puntos de Carga",
+    "slug": "puntos-carga",
+    "scheme": "puntoscarga",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "app.puntoscarga.dev"
+    },
+    "android": {
+      "package": "app.puntoscarga.dev",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-localization",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Usamos tu ubicación solo mientras usas la app, para mostrarte los puntos de recarga cercanos y la distancia hasta ellos."
+        }
+      ]
+    ]
+  }
+}

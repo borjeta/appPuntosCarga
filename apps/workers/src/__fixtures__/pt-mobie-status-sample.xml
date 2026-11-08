@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns4:payload xmlns="http://datex2.eu/schema/3/common" xmlns:ns2="http://datex2.eu/schema/3/facilities" xmlns:ns3="http://datex2.eu/schema/3/energyInfrastructure" xmlns:ns4="http://datex2.eu/schema/3/d2Payload" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ns3:EnergyInfrastructureStatusPublication" lang="pt" modelBaseVersion="3">
+    <publicationTime>2026-11-07T22:05:04.272Z</publicationTime>
+    <publicationCreator>
+        <country>PT</country>
+        <nationalIdentifier>MOBIE</nationalIdentifier>
+    </publicationCreator>
+    <ns3:energyInfrastructureSiteStatus>
+        <ns2:reference targetClass="fac:FacilityObject" id="SGM-GMR-00022"/>
+        <ns3:energyInfrastructureStationStatus>
+            <ns2:reference targetClass="fac:FacilityObject" id="SGM-GMR-00022"/>
+            <ns3:refillPointStatus xsi:type="ns3:ElectricChargingPointStatus">
+                <ns2:reference targetClass="fac:FacilityObject" id="GMR-00022-01"/>
+                <ns3:status>charging</ns3:status>
+                <ns3:electricEnergyMixOverride energyMixIndex="1">
+                    <ns3:rates xsi:type="ns2:GeneralRateInformation">
+                        <ns2:energyPricingPolicy>
+                            <ns3:pricingPolicy>pricePerDeliveryUnit</ns3:pricingPolicy>
+                            <ns3:minimumDeliveryFee>0.55</ns3:minimumDeliveryFee>
+                        </ns2:energyPricingPolicy>
+                        <ns2:applicableCurrency>EUR</ns2:applicableCurrency>
+                        <ns2:overallPeriod>
+                            <overallStartTime>2025-11-14T00:00:00.000Z</overallStartTime>
+                        </ns2:overallPeriod>
+                    </ns3:rates>
+                </ns3:electricEnergyMixOverride>
+            </ns3:refillPointStatus>
+            <ns3:refillPointStatus xsi:type="ns3:ElectricChargingPointStatus">
+                <ns2:reference targetClass="fac:FacilityObject" id="GMR-00022-02"/>
+                <ns3:status>available</ns3:status>
+                <ns3:electricEnergyMixOverride energyMixIndex="1">
+                    <ns3:rates xsi:type="ns2:GeneralRateInformation">
+                        <ns2:energyPricingPolicy>
+                            <ns3:pricingPolicy>pricePerDeliveryUnit</ns3:pricingPolicy>
+                            <ns3:minimumDeliveryFee>0.55</ns3:minimumDeliveryFee>
+                        </ns2:energyPricingPolicy>
+                        <ns2:applicableCurrency>EUR</ns2:applicableCurrency>
+                        <ns2:overallPeriod>
+                            <overallStartTime>2025-11-14T00:00:00.000Z</overallStartTime>
+                        </ns2:overallPeriod>
+                    </ns3:rates>
+                </ns3:electricEnergyMixOverride>
+            </ns3:refillPointStatus>
+            <ns3:refillPointStatus xsi:type="ns3:ElectricChargingPointStatus">
+                <ns2:reference targetClass="fac:FacilityObject" id="GMR-00022-03"/>
+                <ns3:status>available</ns3:status>
+                <ns3:electricEnergyMixOverride energyMixIndex="1">
+                    <ns3:rates xsi:type="ns2:GeneralRateInformation">
+                        <ns2:energyPricingPolicy>
+                            <ns3:pricingPolicy>pricePerDeliveryUnit</ns3:pricingPolicy>
+                            <ns3:minimumDeliveryFee>0.55</ns3:minimumDeliveryFee>
+                        </ns2:energyPricingPolicy>
+                        <ns2:applicableCurrency>EUR</ns2:applicableCurrency>
+                        <ns2:overallPeriod>
+                            <overallStartTime>2025-11-14T00:00:00.000Z</overallStartTime>
+                        </ns2:overallPeriod>
+                    </ns3:rates>
+                </ns3:electricEnergyMixOverride>
+            </ns3:refillPointStatus>
+        </ns3:energyInfrastructureStationStatus>
+    </ns3:energyInfrastructureSiteStatus>
+    <ns3:energyInfrastructureSiteStatus>
+        <ns2:reference targetClass="fac:FacilityObject" id="HRZ-AVV-00004"/>
+        <ns3:energyInfrastructureStationStatus>
+            <ns2:reference targetClass="fac:FacilityObject" id="HRZ-AVV-00004"/>
+            <ns3:refillPointStatus xsi:type="ns3:ElectricChargingPointStatus">
+                <ns2:reference targetClass="fac:FacilityObject" id="AVV-00004-01"/>
+                <ns3:status>available</ns3:status>
+                <ns3:electricEnergyMixOverride energyMixIndex="1">
+                    <ns3:rates xsi:type="ns2:GeneralRateInformation">
+                        <ns2:energyPricingPolicy>
+                            <ns3:pricingPolicy>pricePerDeliveryUnit</ns3:pricingPolicy>
+                            <ns3:minimumDeliveryFee>0.57</ns3:minimumDeliveryFee>
+                        </ns2:energyPricingPolicy>
+                        <ns2:applicableCurrency>EUR</ns2:applicableCurrency>
+                        <ns2:overallPeriod>
+                            <overallStartTime>1970-01-01T00:00:00.000Z</overallStartTime>
+                        </ns2:overallPeriod>
+                    </ns3:rates>
+                </ns3:electricEnergyMixOverride>
+            </ns3:refillPointStatus>
+            <ns3:refillPointStatus xsi:type="ns3:ElectricChargingPointStatus">
+                <ns2:reference targetClass="fac:FacilityObject" id="AVV-00004-02"/>
+                <ns3:status>available</ns3:status>
+                <ns3:electricEnergyMixOverride energyMixIndex="1">
+                    <ns3:rates xsi:type="ns2:GeneralRateInformation">
+                        <ns2:energyPricingPolicy>
+                            <ns3:pricingPolicy>pricePerDeliveryUnit</ns3:pricingPolicy>
+                            <ns3:minimumDeliveryFee>0.57</ns3:minimumDeliveryFee>
+                        </ns2:energyPricingPolicy>
+                        <ns2:applicableCurrency>EUR</ns2:applicableCurrency>
+                        <ns2:overallPeriod>
+                            <overallStartTime>1970-01-01T00:00:00.000Z</overallStartTime>
+                        </ns2:overallPeriod>
+                    </ns3:rates>
+                </ns3:electricEnergyMixOverride>
+            </ns3:refillPointStatus>
+            <ns3:refillPointStatus xsi:type="ns3:ElectricChargingPointStatus">
+                <ns2:reference targetClass="fac:FacilityObject" id="AVV-00004-03"/>
+                <ns3:status>available</ns3:status>
+                <ns3:electricEnergyMixOverride energyMixIndex="1">
+                    <ns3:rates xsi:type="ns2:GeneralRateInformation">
+                        <ns2:energyPricingPolicy>
+                            <ns3:pricingPolicy>pricePerDeliveryUnit</ns3:pricingPolicy>
+                            <ns3:minimumDeliveryFee>0.57</ns3:minimumDeliveryFee>
+                        </ns2:energyPricingPolicy>
+                        <ns2:applicableCurrency>EUR</ns2:applicableCurrency>
+                        <ns2:overallPeriod>
+                            <overallStartTime>1970-01-01T00:00:00.000Z</overallStartTime>
+                        </ns2:overallPeriod>
+                    </ns3:rates>
+                </ns3:electricEnergyMixOverride>
+            </ns3:refillPointStatus>
+            <ns3:refillPointStatus xsi:type="ns3:ElectricChargingPointStatus">
+                <ns2:reference targetClass="fac:FacilityObject" id="AVV-00004-04"/>
+                <ns3:status>available</ns3:status>
+                <ns3:electricEnergyMixOverride energyMixIndex="1">
+                    <ns3:rates xsi:type="ns2:GeneralRateInformation">
+                        <ns2:energyPricingPolicy>
+                            <ns3:pricingPolicy>pricePerDeliveryUnit</ns3:pricingPolicy>
+                            <ns3:minimumDeliveryFee>0.57</ns3:minimumDeliveryFee>
+                        </ns2:energyPricingPolicy>
+                        <ns2:applicableCurrency>EUR</ns2:applicableCurrency>
+                        <ns2:overallPeriod>
+                            <overallStartTime>1970-01-01T00:00:00.000Z</overallStartTime>
+                        </ns2:overallPeriod>
+                    </ns3:rates>
+                </ns3:electricEnergyMixOverride>
+            </ns3:refillPointStatus>
+        </ns3:energyInfrastructureStationStatus>
+    </ns3:energyInfrastructureSiteStatus>
+</ns4:payload>

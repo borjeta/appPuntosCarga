@@ -1,0 +1,15 @@
+{
+  "name": "@pc/planner",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Planificador de rutas con paradas de carga, común a la app y la API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc -b",
+    "typecheck": "tsc -p tsconfig.test.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": { "@pc/pricing": "*", "@pc/shared": "*" }
+}

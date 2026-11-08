@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?><d2:payload xmlns:d2="http://datex2.eu/schema/3/d2Payload" xsi:type="egi:EnergyInfrastructureTablePublication" lang="es" modelBaseVersion="3" xmlns:com="http://datex2.eu/schema/3/common" xmlns:loc="http://datex2.eu/schema/3/locationReferencing" xmlns:roa="http://datex2.eu/schema/3/roadTrafficData" xmlns:egi="http://datex2.eu/schema/3/energyInfrastructure" xmlns:prk="http://datex2.eu/schema/3/parking" xmlns:comx="http://datex2.eu/schema/3/commonExtension" xmlns:fac="http://datex2.eu/schema/3/facilities" xmlns:locx="http://datex2.eu/schema/3/locationExtension" xmlns:vms="http://datex2.eu/schema/3/vms" xmlns:sit="http://datex2.eu/schema/3/situation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <com:feedDescription>
+        <com:values>
+            <com:value lang="es">Publicación de electrolineras</com:value>
+        </com:values>
+    </com:feedDescription>
+    <com:publicationTime>2026-11-07T10:16:37.704+01:00</com:publicationTime>
+    <com:publicationCreator>
+        <com:country>ES</com:country>
+        <com:nationalIdentifier>dgt</com:nationalIdentifier>
+    </com:publicationCreator>
+    <egi:headerInformation>
+        <com:informationStatus>real</com:informationStatus>
+    </egi:headerInformation>
+    <egi:energyInfrastructureTable id="ELECTROLINERAS" version="20261107">
+        <egi:energyInfrastructureSite id="2023002088" version="">
+            <fac:name>
+                <com:values>
+                    <com:value lang="es">Centro Porsche Baleares CP2</com:value>
+                </com:values>
+            </fac:name>
+            <fac:lastUpdated>2023-11-21T11:39:04.000+01:00</fac:lastUpdated>
+            <fac:accessibility xsi:nil="true"/>
+            <fac:operatingHours xsi:type="fac:OperatingHoursSpecification" id="Horario habitual" version="">
+                <fac:label>Miercoles (08:30 - 17:30) Lunes (00:00 - 23:59) Jueves (08:30 - 17:30) Martes (08:30 - 17:30) Sabado (08:30 - 17:30) Viernes (08:30 - 17:30) Domingo (00:00 - 23:59) </fac:label>
+                <fac:overallPeriod>
+                    <com:overallStartTime>2023-01-01T00:00:00.000+01:00</com:overallStartTime>
+                </fac:overallPeriod>
+            </fac:operatingHours>
+            <fac:locationReference xsi:type="loc:PointLocation">
+                <loc:_locationReferenceExtension>
+                    <loc:facilityLocation>
+                        <locx:address>
+                            <locx:postcode>7011</locx:postcode>
+                            <locx:addressLine order="1">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Dirección: Camí dels Reis 166</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="2">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Municipio: Palma</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="3">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Provincia: Balears, Illes</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="4">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Comunidad Autónoma: Balears, Illes</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                        </locx:address>
+                    </loc:facilityLocation>
+                </loc:_locationReferenceExtension>
+                <loc:coordinatesForDisplay>
+                    <loc:latitude>39.5948</loc:latitude>
+                    <loc:longitude>2.63586</loc:longitude>
+                </loc:coordinatesForDisplay>
+            </fac:locationReference>
+            <fac:operator xsi:type="fac:OrganisationSpecification" id="ES*915" version="">
+                <fac:name>
+                    <com:values>
+                        <com:value lang="es">Motor Box Mallorca SL</com:value>
+                    </com:values>
+                </fac:name>
+                <fac:organisationUnit/>
+            </fac:operator>
+            <egi:typeOfSite>other</egi:typeOfSite>
+            <egi:energyInfrastructureStation id="2023002088_1" version="">
+                <egi:authenticationAndIdentificationMethods>rfid</egi:authenticationAndIdentificationMethods>
+                <egi:authenticationAndIdentificationMethods>apps</egi:authenticationAndIdentificationMethods>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20230000010507PR00000269" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*915*EES00025600000020000001</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2COMBO</egi:connectorType>
+                        <egi:chargingMode>mode4DC</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>350000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>920.0</egi:voltage>
+                        <egi:maximumCurrent>348.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+            </egi:energyInfrastructureStation>
+        </egi:energyInfrastructureSite>
+        <egi:energyInfrastructureSite id="2024000026" version="">
+            <fac:name>
+                <com:values>
+                    <com:value lang="es">MA-Malaga-021</com:value>
+                </com:values>
+            </fac:name>
+            <fac:lastUpdated>2024-01-31T15:04:19.000+01:00</fac:lastUpdated>
+            <fac:accessibility xsi:nil="true"/>
+            <fac:operatingHours xsi:type="fac:OperatingHoursSpecification" id="24/7" version="">
+                <fac:label>Sabado (00:00 - 23:59) Martes (00:00 - 23:59) Lunes (00:00 - 23:59) Viernes (00:00 - 23:59) Miercoles (00:00 - 23:59) Jueves (00:00 - 23:59) Domingo (00:00 - 23:59) </fac:label>
+                <fac:overallPeriod>
+                    <com:overallStartTime>2023-01-01T00:00:00.000+01:00</com:overallStartTime>
+                </fac:overallPeriod>
+            </fac:operatingHours>
+            <fac:locationReference xsi:type="loc:PointLocation">
+                <loc:_locationReferenceExtension>
+                    <loc:facilityLocation>
+                        <locx:address>
+                            <locx:postcode>29001</locx:postcode>
+                            <locx:addressLine order="1">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Dirección: De La Marina,S/N</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="2">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Municipio: Málaga</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="3">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Provincia: Málaga</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="4">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Comunidad Autónoma: Andalucía</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                        </locx:address>
+                    </loc:facilityLocation>
+                </loc:_locationReferenceExtension>
+                <loc:coordinatesForDisplay>
+                    <loc:latitude>36.717728</loc:latitude>
+                    <loc:longitude>-4.420187</loc:longitude>
+                </loc:coordinatesForDisplay>
+            </fac:locationReference>
+            <fac:operator xsi:type="fac:OrganisationSpecification" id="ES*IBD" version="">
+                <fac:name>
+                    <com:values>
+                        <com:value lang="es">IBERDROLA CLIENTES S.A.U</com:value>
+                    </com:values>
+                </fac:name>
+                <fac:organisationUnit/>
+            </fac:operator>
+            <egi:energyInfrastructureStation id="2024000026_1" version="">
+                <egi:authenticationAndIdentificationMethods>debitCard</egi:authenticationAndIdentificationMethods>
+                <egi:authenticationAndIdentificationMethods>rfid</egi:authenticationAndIdentificationMethods>
+                <egi:authenticationAndIdentificationMethods>creditCard</egi:authenticationAndIdentificationMethods>
+                <egi:authenticationAndIdentificationMethods>apps</egi:authenticationAndIdentificationMethods>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020076PR00000079" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214337</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020077PR00000080" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214338</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>socket</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020078PR00000081" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214339</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>socket</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020079PR00000082" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214340</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020080PR00000083" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214545</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020081PR00000084" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214546</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>socket</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020082PR00000085" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214547</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020083PR00000086" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214548</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>socket</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020084PR00000087" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214781</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>socket</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000020085PR00000088" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E214782</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2</egi:connectorType>
+                        <egi:chargingMode>mode3AC3p</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>22000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>400.0</egi:voltage>
+                        <egi:maximumCurrent>32.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+            </egi:energyInfrastructureStation>
+        </egi:energyInfrastructureSite>
+        <egi:energyInfrastructureSite id="2024000167" version="">
+            <fac:name>
+                <com:values>
+                    <com:value lang="es">VI-VITORIA-021</com:value>
+                </com:values>
+            </fac:name>
+            <fac:lastUpdated>2024-01-19T00:09:05.000+01:00</fac:lastUpdated>
+            <fac:accessibility xsi:nil="true"/>
+            <fac:operatingHours xsi:type="fac:OperatingHoursSpecification" id="24/7" version="">
+                <fac:label>Lunes (00:00 - 23:59) Viernes (00:00 - 23:59) Martes (00:00 - 23:59) Sabado (00:00 - 23:59) Jueves (00:00 - 23:59) Miercoles (00:00 - 23:59) Domingo (00:00 - 23:59) </fac:label>
+                <fac:overallPeriod>
+                    <com:overallStartTime>2023-01-01T00:00:00.000+01:00</com:overallStartTime>
+                </fac:overallPeriod>
+            </fac:operatingHours>
+            <fac:locationReference xsi:type="loc:PointLocation">
+                <loc:_locationReferenceExtension>
+                    <loc:facilityLocation>
+                        <locx:address>
+                            <locx:postcode>1010</locx:postcode>
+                            <locx:addressLine order="1">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Dirección: Bremen,10</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="2">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Municipio: Vitoria-Gasteiz</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="3">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Provincia: Araba/Álava</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                            <locx:addressLine order="4">
+                                <locx:type>generalTextLine</locx:type>
+                                <locx:text>
+                                    <com:values>
+                                        <com:value lang="es">Comunidad Autónoma: País Vasco</com:value>
+                                    </com:values>
+                                </locx:text>
+                            </locx:addressLine>
+                        </locx:address>
+                    </loc:facilityLocation>
+                </loc:_locationReferenceExtension>
+                <loc:coordinatesForDisplay>
+                    <loc:latitude>42.853657</loc:latitude>
+                    <loc:longitude>-2.709212</loc:longitude>
+                </loc:coordinatesForDisplay>
+            </fac:locationReference>
+            <fac:operator xsi:type="fac:OrganisationSpecification" id="ES*IBD" version="">
+                <fac:name>
+                    <com:values>
+                        <com:value lang="es">IBERDROLA CLIENTES S.A.U</com:value>
+                    </com:values>
+                </fac:name>
+                <fac:organisationUnit/>
+            </fac:operator>
+            <fac:supplementalFacility xsi:type="fac:SupplementalServiceFacility" id="0" version="">
+                <fac:serviceFacilityType>restaurant</fac:serviceFacilityType>
+            </fac:supplementalFacility>
+            <egi:typeOfSite>openSpace</egi:typeOfSite>
+            <egi:energyInfrastructureStation id="2024000167_1" version="">
+                <egi:authenticationAndIdentificationMethods>rfid</egi:authenticationAndIdentificationMethods>
+                <egi:authenticationAndIdentificationMethods>apps</egi:authenticationAndIdentificationMethods>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000017756PR00000471" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E227520</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2COMBO</egi:connectorType>
+                        <egi:chargingMode>mode4DC</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>100000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>1000.0</egi:voltage>
+                        <egi:maximumCurrent>400.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+                <egi:refillPoint xsi:type="egi:ElectricChargingPoint" id="COD20240000017757PR00000472" version="">
+                    <fac:name>
+                        <com:values>
+                            <com:value lang="es">ES*IBD*E227521</com:value>
+                        </com:values>
+                    </fac:name>
+                    <egi:connector>
+                        <egi:connectorType>iec62196T2COMBO</egi:connectorType>
+                        <egi:chargingMode>mode4DC</egi:chargingMode>
+                        <egi:connectorFormat>cableMode3</egi:connectorFormat>
+                        <egi:maxPowerAtSocket>100000.0</egi:maxPowerAtSocket>
+                        <egi:voltage>1000.0</egi:voltage>
+                        <egi:maximumCurrent>400.0</egi:maximumCurrent>
+                    </egi:connector>
+                </egi:refillPoint>
+            </egi:energyInfrastructureStation>
+        </egi:energyInfrastructureSite>
+    </egi:energyInfrastructureTable>
+</d2:payload>

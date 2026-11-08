@@ -1,0 +1,37 @@
+{
+  "name": "puntos-carga",
+  "private": true,
+  "description": "App unificada de puntos de recarga de vehículos eléctricos (España + Europa)",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:packages": "tsc -b packages/shared packages/pricing packages/dataset packages/planner packages/db",
+    "db:up": "docker compose -f infra/docker-compose.yml up -d",
+    "db:down": "docker compose -f infra/docker-compose.yml down",
+    "db:local:setup": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/local-db.ps1 setup",
+    "db:local:start": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/local-db.ps1 start",
+    "db:local:stop": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/local-db.ps1 stop",
+    "db:migrate": "npm run build:packages && npm run migrate -w @pc/db",
+    "ingest": "npm run build:packages && npm run ingest -w @pc/workers --",
+    "status:watch": "npm run build:packages && npm run ingest -w @pc/workers -- watch-status pt-mobie",
+    "data:export": "npm run build:packages && npm run ingest -w @pc/workers -- export",
+    "data:serve": "node scripts/serve-data.mjs",
+    "dev:api": "npm run build:packages && npm run dev -w @pc/api",
+    "dev:mobile": "npm run build:packages && npm run start -w @pc/mobile",
+    "typecheck": "npm run build:packages && npm run typecheck --workspaces --if-present",
+    "test": "npm run build:packages && npm run test --workspaces --if-present",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.9.10",
+    "typescript": "5.9.3",
+    "vitest": "^5.1.0"
+  }
+}
