@@ -33,8 +33,17 @@ export const DATA_URL: string = trim(
     : process.env.EXPO_PUBLIC_DATA_URL || PUBLISHED_DATA_URL,
 );
 
-export const SUPABASE_URL: string | null = process.env.EXPO_PUBLIC_SUPABASE_URL || null;
-export const SUPABASE_KEY: string | null = process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || null;
+/**
+ * Proyecto Supabase de la comunidad. La clave "publishable" es pública por diseño (va dentro de la
+ * app): lo que protege los datos son las reglas RLS de supabase/migrations.
+ */
+const DEFAULT_SUPABASE_URL = 'https://mfbauxiyuqpfvmydedhk.supabase.co';
+const DEFAULT_SUPABASE_KEY = 'sb_publishable_aXl9VYcVy9ET-StWncIvnA_Ugoo6ttv';
+
+export const SUPABASE_URL: string | null =
+  process.env.EXPO_PUBLIC_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+export const SUPABASE_KEY: string | null =
+  process.env.EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY || DEFAULT_SUPABASE_KEY;
 
 export const ROUTING_URL: string | undefined = process.env.EXPO_PUBLIC_ROUTING_URL || undefined;
 export const GEOCODER_URL: string | undefined = process.env.EXPO_PUBLIC_GEOCODER_URL || undefined;
