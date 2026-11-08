@@ -15,6 +15,9 @@ La API NestJS (`apps/api`) sigue en el repositorio como opción, pero la app no 
 
 ## 1. GitHub: publicar los datos
 
+> **Estado (8 nov 2026):** hecho en https://github.com/borjeta/appPuntosCarga. Datos publicados en
+> https://borjeta.github.io/appPuntosCarga/manifest.json y la app los usa por defecto.
+
 1. Crea un repositorio **público** en GitHub y sube el proyecto (`git push`).
    - Público porque GitHub Pages y los minutos de Actions son gratis e ilimitados en repos públicos.
      Los datos ya son abiertos (registros oficiales), y el código no contiene secretos.
@@ -52,7 +55,7 @@ A partir de ahí se actualizan solos: estado en tiempo real cada 15 min e ingest
 En `apps/mobile/.env.local` (ver `apps/mobile/.env.example`):
 
 ```bash
-EXPO_PUBLIC_DATA_URL=https://<usuario>.github.io/<repositorio>
+# EXPO_PUBLIC_DATA_URL ya apunta por defecto a https://borjeta.github.io/appPuntosCarga
 EXPO_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
 EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<clave publishable>
 ```
@@ -65,7 +68,7 @@ Para builds de tienda (EAS), las mismas variables con `eas env:create`.
 npm run db:up && npm run db:migrate
 npm run ingest -- sites all && npm run ingest -- vehicles
 npm run data:export        # genera data/public
-npm run data:serve         # sirve data/public en :8090 (la app lo encuentra sola)
+npm run data:serve         # sirve data/public en :8090 (con EXPO_PUBLIC_DATA_URL=local)
 npx supabase start         # Supabase local en Docker (opcional, para la comunidad)
 npm run dev:mobile
 ```

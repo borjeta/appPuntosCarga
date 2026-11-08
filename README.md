@@ -71,7 +71,7 @@ npm run ingest -- vehicles        # catálogo de modelos de vehículo (Open EV D
 npm run status:watch              # opcional: estado en tiempo real de Portugal cada 2 min
 
 npm run data:export               # genera los ficheros estáticos en data/public
-npm run data:serve                # los sirve en :8090 (la app los encuentra sola)
+npm run data:serve                # los sirve en :8090 (EXPO_PUBLIC_DATA_URL=local para usarlos)
 npx supabase start                # opcional: Supabase local para la comunidad (Docker)
 npm run dev:mobile                # escanea el QR con Expo Go (móvil en la misma wifi)
 

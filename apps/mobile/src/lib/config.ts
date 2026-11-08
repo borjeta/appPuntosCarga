@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 
 /**
  * Configuración de la app. Por defecto funciona SIN servidor propio:
- *  - Datos de estaciones/vehículos/estado: ficheros estáticos (GitHub Pages) → EXPO_PUBLIC_DATA_URL
+ *  - Datos de estaciones/vehículos/estado: ficheros estáticos en GitHub Pages (EXPO_PUBLIC_DATA_URL)
  *  - Comunidad: Supabase → EXPO_PUBLIC_SUPABASE_URL + EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
  *  - Rutas y lugares: servicios públicos (OSRM, Photon) → EXPO_PUBLIC_ROUTING_URL / _GEOCODER_URL
  * Si se define EXPO_PUBLIC_API_URL, la app usa en su lugar la API NestJS (modo servidor).
@@ -20,9 +20,17 @@ export const SERVER_API_URL: string | null = process.env.EXPO_PUBLIC_API_URL
   ? trim(process.env.EXPO_PUBLIC_API_URL)
   : null;
 
-/** En desarrollo, `npm run data:serve` sirve data/public en el puerto 8090 del ordenador. */
+/** Datos publicados por el workflow "Datos" en GitHub Pages. */
+export const PUBLISHED_DATA_URL = 'https://borjeta.github.io/appPuntosCarga';
+
+/**
+ * Origen de los datos: GitHub Pages por defecto. Para probar datos generados en local
+ * (`npm run data:serve`), EXPO_PUBLIC_DATA_URL=local usa el puerto 8090 de este ordenador.
+ */
 export const DATA_URL: string = trim(
-  process.env.EXPO_PUBLIC_DATA_URL || `http://${devHost() ?? 'localhost'}:8090`,
+  process.env.EXPO_PUBLIC_DATA_URL === 'local'
+    ? `http://${devHost() ?? 'localhost'}:8090`
+    : process.env.EXPO_PUBLIC_DATA_URL || PUBLISHED_DATA_URL,
 );
 
 export const SUPABASE_URL: string | null = process.env.EXPO_PUBLIC_SUPABASE_URL || null;
