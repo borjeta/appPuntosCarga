@@ -111,6 +111,17 @@
           "userTrackingPermission": "Si lo permites, los anuncios pueden ser más relevantes para ti. No vendemos tus datos y la app funciona igual si no lo permites. Con Premium no hay anuncios."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "905d6b13-bef6-4e41-8f54-8684c22ef3ab"
+      }
+    },
+    "owner": "borjaappsdev"
   }
 }
