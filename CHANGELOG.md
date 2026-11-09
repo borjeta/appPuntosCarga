@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.4.0 — 9 nov 2026 · Francia, Alemania y preparación para la App Store
+
+### Datos: escala europea
+- Nuevas fuentes oficiales: **Francia** (Base nationale des IRVE, data.gouv.fr: 38.966 estaciones) y
+  **Alemania** (Ladesäulenregister de la Bundesnetzagentur: 70.561). Total: 130.401 estaciones y 395.973 puntos.
+- Francia: unión de duplicados entre publicadores por id de punto (union-find) y solo acceso público.
+- Formato de datos v2: índice compacto por país + teselas de 0,5° con las fichas, descargadas bajo
+  demanda. España+Portugal pasan de 1,8 a 0,74 MB de descarga inicial; las 130.401 estaciones cargan en
+  0,6 s (PC).
+- Ajustes → Países en el mapa (por defecto España y Portugal).
+- Workflow: datos generados guardados en la caché de Actions (la tarea de 15 min solo regenera el estado);
+  concurrencia solo en el despliegue, para que un despliegue atascado no bloquee los siguientes.
+
+### App Store
+- Icono, pantalla de arranque, permisos, manifiesto de privacidad, cifrado, `eas.json`, identificador
+  `com.borjeta.puntoscarga`; proyecto iOS verificado generándolo en Linux.
+- Ajustes → Privacidad: política, ayuda y borrar mis datos (cuenta anónima y avisos incluidos).
+- Páginas de privacidad y soporte publicadas; guía y textos de la ficha en `docs/app-store.md`.
+- Comunidad sin comentarios libres en la v1 (norma 1.2).
+
 ## 0.3.0 — 8 nov 2026 · Sin servidor propio
 
 - La app ya no necesita la API: descarga ficheros estáticos (≈ 2 MB comprimidos) publicados en GitHub

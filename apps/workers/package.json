@@ -9,10 +9,11 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@pc/dataset": "*",
     "@pc/db": "*",
     "@pc/shared": "*",
-    "saxes": "^6.0.0",
-    "@pc/dataset": "*"
+    "csv-parse": "^7.0.3",
+    "saxes": "^6.0.0"
   },
   "devDependencies": {
     "tsx": "^4.23.15"

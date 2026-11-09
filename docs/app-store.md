@@ -57,21 +57,22 @@ la app TestFlight y prueba: mapa, "Cerca", una ruta, un aviso de comunidad y "Bo
 **URL de soporte**: https://borjeta.github.io/appPuntosCarga/soporte.html
 **URL de privacidad**: https://borjeta.github.io/appPuntosCarga/privacidad.html
 **Derechos de contenido**: "Sí, tengo los derechos": los datos son abiertos (NAP de la DGT, CC BY; MOBI.E;
-Open EV Data, MIT con atribución) y la app los atribuye en Ajustes → Fuentes de datos.
+data.gouv.fr, Licence Ouverte; Bundesnetzagentur, CC BY 4.0; Open EV Data, MIT con atribución) y la app los atribuye en Ajustes → Fuentes de datos.
 
 #### Español (España)
 - **Nombre** (máx. 30): `Puntos de Carga` *(si está cogido, prueba otro; el nombre de la tienda puede
   diferir del que se ve bajo el icono)*
 - **Subtítulo** (máx. 30): `Mapa de cargadores eléctricos`
 - **Palabras clave** (máx. 100): `cargador,recarga,coche eléctrico,electrolinera,punto de carga,ruta,CCS,tipo 2,mapa,EV,enchufe`
-- **Texto promocional** (máx. 170): `Todos los puntos de recarga públicos de España y Portugal en un mapa, con estado en tiempo real, coste estimado para tu coche y rutas con paradas de carga.`
+- **Texto promocional** (máx. 170): `Todos los puntos de recarga públicos de España, Portugal, Francia y Alemania en un mapa, con estado en tiempo real, coste para tu coche y rutas con paradas.`
 - **Descripción**:
 
 ```
-Todos los puntos de recarga públicos de España y Portugal en una sola app, sean de la compañía que sean: Iberdrola, Endesa X Way, Repsol, Tesla, Ionity, Zunder, Wenea, EDP, Galp y más de 150 operadores.
+Todos los puntos de recarga públicos de España, Portugal, Francia y Alemania en una sola app, sean de la compañía que sean: Iberdrola, Endesa X Way, Repsol, Tesla, Ionity, Zunder, Wenea, EDP, Galp, TotalEnergies, EnBW y cientos de operadores más.
 
 MAPA UNIFICADO
-• Más de 20.000 estaciones con sus conectores (CCS2, Tipo 2, CHAdeMO…) y potencia.
+• Más de 130.000 estaciones con sus conectores (CCS2, Tipo 2, CHAdeMO…) y potencia.
+• Elige qué países descargar: funciona sin conexión con los datos guardados.
 • Estado en tiempo real (libre, cargando, averiado) donde el operador lo publica.
 • Filtros por conector, potencia, operador, pago con tarjeta y 24 horas.
 
@@ -90,19 +91,19 @@ PRIVACIDAD
 • Sin registro, sin publicidad y sin seguimiento. Tu ubicación se usa solo en el móvil.
 • Funciona sin conexión con los últimos datos descargados.
 
-Los datos proceden de los registros oficiales donde los operadores están obligados a publicar sus puntos de recarga (Reglamento UE 2023/1804): Punto de Acceso Nacional de la DGT (España) y MOBI.E (Portugal).
+Los datos proceden de los registros oficiales donde los operadores están obligados a publicar sus puntos de recarga (Reglamento UE 2023/1804): DGT (España), MOBI.E (Portugal), data.gouv.fr (Francia) y Bundesnetzagentur (Alemania).
 ```
 
 #### English (U.K. / U.S.)
 - **Name**: `Charging Points EV` · **Subtitle**: `EV charger map & trip planner`
-- **Keywords**: `EV charger,charging station,electric car,charge map,route planner,CCS,type 2,Spain,Portugal`
-- **Promotional text**: `Every public charging point in Spain and Portugal on one map, with live availability, estimated cost for your car and trips with charging stops.`
+- **Keywords**: `EV charger,charging station,electric car,charge map,route planner,CCS,type 2,Europe,Spain`
+- **Promotional text**: `Every public charging point in Spain, Portugal, France and Germany on one map, with live availability, cost for your car and trips with charging stops.`
 - **Description**:
 
 ```
-Every public EV charging point in Spain and Portugal in one app, whatever the operator: Iberdrola, Endesa X Way, Repsol, Tesla, Ionity, Zunder, Wenea, EDP, Galp and 150+ more.
+Every public EV charging point in Spain, Portugal, France and Germany in one app, whatever the operator: Iberdrola, Endesa X Way, Repsol, Tesla, Ionity, TotalEnergies, EnBW and hundreds more.
 
-• 20,000+ stations with connectors (CCS2, Type 2, CHAdeMO…) and power.
+• 130,000+ stations with connectors (CCS2, Type 2, CHAdeMO…) and power. Choose which countries to download.
 • Live availability where the operator publishes it.
 • Filters by connector, power, operator, card payment and 24 h access.
 • Pick your car from 1,200+ models and see charging time and cost.

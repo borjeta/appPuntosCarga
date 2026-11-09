@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,7 @@ import { Alert, Platform, Pressable, ScrollView, StyleSheet, View } from 'react-
 import { Card, Chip, Section, T, type IconName } from '../../components/ui';
 import { BACKEND_MODE } from '../../lib/backend';
 import { DATA_ORIGIN, PRIVACY_URL, SUPPORT_URL } from '../../lib/config';
+import { repository } from '../../lib/data/repository';
 import { openWebsite } from '../../lib/links';
 import { deleteMyCommunityData } from '../../lib/supabase';
 import {
@@ -26,6 +27,23 @@ export default function SettingsScreen() {
   const vehicle = useActiveVehicle();
   const resetAll = useAppStore((s) => s.resetAll);
   const queryClient = useQueryClient();
+  const countries = useAppStore((s) => s.countries);
+  const setCountries = useAppStore((s) => s.setCountries);
+  const available = useQuery({
+    queryKey: ['countries'],
+    queryFn: async () => (await repository.ready()).availableCountries(),
+    enabled: BACKEND_MODE === 'local',
+  });
+  const toggleCountry = async (cc: string) => {
+    const next = countries.includes(cc) ? countries.filter((c) => c !== cc) : [...countries, cc];
+    if (!next.length) return; // al menos un país
+    setCountries(next);
+    await repository.setCountries(next);
+    await queryClient.invalidateQueries({
+      predicate: (q) =>
+        ['map', 'nearby', 'location', 'search', 'operators'].includes(String(q.queryKey[0])),
+    });
+  };
   const [deleteState, setDeleteState] = useState<{ ok: boolean; text: string } | null>(null);
 
   const doDelete = async () => {
@@ -111,6 +129,25 @@ export default function SettingsScreen() {
           <Ionicons name="chevron-forward" size={18} color={theme.textMuted} />
         </Pressable>
       </Section>
+
+      {BACKEND_MODE === 'local' && available.data?.length ? (
+        <Section title={t('settings.countries')}>
+          <View style={styles.wrap}>
+            {available.data.map((c) => (
+              <Chip
+                key={c.cc}
+                label={`${t(`country.${c.cc}`, { defaultValue: c.cc })} · ${c.count.toLocaleString()}`}
+                selected={countries.includes(c.cc)}
+                icon={countries.includes(c.cc) ? 'checkmark' : 'add'}
+                onPress={() => void toggleCountry(c.cc)}
+              />
+            ))}
+          </View>
+          <T muted variant="small">
+            {t('settings.countriesHint')}
+          </T>
+        </Section>
+      ) : null}
 
       <Section title={t('settings.data')}>
         <Pressable

@@ -2,6 +2,8 @@ import { join, resolve } from 'node:path';
 import { createPool, runMigrations } from '@pc/db';
 import { ingestSites, ingestStatuses } from './pipeline/ingest';
 import { esNapDgt } from './sources/es-nap-dgt';
+import { deBnetza } from './sources/de-bnetza';
+import { frIrve } from './sources/fr-irve';
 import { ptMobie } from './sources/pt-mobie';
 import type { SourceAdapter } from './sources/types';
 import { ingestVehicles } from './vehicles/open-ev-data';
@@ -16,6 +18,8 @@ try {
 export const SOURCES: Record<string, SourceAdapter> = {
   [esNapDgt.meta.id]: esNapDgt,
   [ptMobie.meta.id]: ptMobie,
+  [frIrve.meta.id]: frIrve,
+  [deBnetza.meta.id]: deBnetza,
 };
 
 const USAGE = `Uso:
@@ -50,6 +54,11 @@ async function main() {
       const m = await exportAll(pool, Object.values(SOURCES), outDir, {
         force: argv.includes('--force'),
       });
+      for (const c of m.countries) {
+        log(
+          `✔ ${c.cc}: ${c.count} estaciones · índice ${(c.index.bytes / 1048576).toFixed(1)} MB · ${c.tiles.length} teselas`,
+        );
+      }
       for (const [name, f] of Object.entries(m.files)) {
         log(`✔ ${name}: ${f.count} registros, ${(f.bytes / 1048576).toFixed(1)} MB`);
       }

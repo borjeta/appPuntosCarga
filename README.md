@@ -4,23 +4,25 @@ Una sola app para **encontrar, comparar y llegar** a cualquier punto de recarga 
 compañía que sea. Especificación completa: [PROMPT_APP_RECARGA.md](PROMPT_APP_RECARGA.md).
 
 **Estado:** fases 0 y 1 completas, fase 2 en curso y arquitectura **sin servidor propio** (vehículos, estimación de carga, planificador de rutas y
-comunidad) para **España y Portugal**.
+comunidad) para **España, Portugal, Francia y Alemania**.
 
-| Qué | Dato real (8 nov 2026) |
+| Qué | Dato real (9 nov 2026) |
 |---|---|
-| Estaciones | 20.897 (12.086 ES + 8.811 PT) |
-| Puntos de recarga (EVSE) | 55.344 |
-| Operadores | 159 en España + los de Portugal |
-| Estado en tiempo real | Portugal (MOBI.E), cada 2 min. España: el NAP aún no lo publica |
-| Precios | Precio base del operador en Portugal. España: no publicado en el NAP |
+| Países | España, Portugal, Francia y Alemania (el usuario elige cuáles descargar) |
+| Estaciones | 130.401 (DE 70.561 · FR 38.966 · ES 12.086 · PT 8.788) |
+| Puntos de recarga (EVSE) | 395.973 |
+| Estado en tiempo real | Portugal (MOBI.E), cada 15 min. Resto: los registros aún no lo publican |
+| Precios | Precio base del operador en Portugal; en el resto no se publica |
 
 ## Cómo funciona (sin servidor propio)
 
 ```
 NAP España (DGT) ──┐   GitHub Actions (cada 15 min / diario)     GitHub Pages            Móvil (Expo)
-MOBI.E Portugal ───┼─► ingesta + PostGIS temporal ─► export ─► manifest/stations/ ─► motor local: mapa,
-Open EV Data ──────┘                                            status/vehicles.json    filtros, fichas,
-                                                                (≈ 2 MB gzip)           coste, rutas
+MOBI.E Portugal ───┼─► ingesta + PostGIS temporal ─► export ─► manifest + índice/país ─► motor local: mapa,
+IRVE Francia ──────┤
+BNetzA Alemania ───┤
+Open EV Data ──────┘                                            + teselas de fichas    filtros, fichas,
+                                                                (ES+PT ≈ 0,8 MB)           coste, rutas
                                                    Supabase (avisos, sesión anónima) ◄─► comunidad
                                                    OSRM / Photon (trazado y lugares) ◄─► planificador
 ```
@@ -66,7 +68,7 @@ npm run db:local:setup   # Windows sin Docker: descarga PostgreSQL 17 + PostGIS 
 npm run db:local:start   # Windows sin Docker: arranques siguientes
 
 npm run db:migrate
-npm run ingest -- sites all       # España + Portugal (~3 min la primera vez; luego segundos)
+npm run ingest -- sites all       # ES, PT, FR y DE (~25 min la primera vez; luego mucho menos)
 npm run ingest -- vehicles        # catálogo de modelos de vehículo (Open EV Data)
 npm run status:watch              # opcional: estado en tiempo real de Portugal cada 2 min
 

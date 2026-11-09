@@ -1,3 +1,4 @@
+import { summaryConnectors } from '@pc/dataset';
 import {
   assemblePlan,
   CORRIDOR_M,
@@ -52,8 +53,12 @@ export const localBackend: Backend = {
   sources: async () => (await repository.ready()).manifest?.sources ?? [],
 
   location: async (id): Promise<LocationDetail> => {
-    const detail = (await index()).detail(id);
-    if (!detail) throw new ApiError(404, 'Estación no encontrada');
+    const idx = await index();
+    const where = idx.tileOf(id);
+    const tile = where ? await repository.tile(where.cc, where.key) : null;
+    const record = tile?.stations.find((s) => s.i === id);
+    if (!tile || !record) throw new ApiError(404, 'Estación no encontrada');
+    const detail = idx.detail(record, tile.operators);
     // La comunidad es opcional: si falla (sin conexión, sin Supabase) la ficha se muestra igual.
     const community = await communitySummary(id).catch(() => ({
       ...EMPTY_COMMUNITY,
@@ -78,18 +83,12 @@ export const localBackend: Backend = {
     const minPowerKw = vehicle.dc ? (req.minPowerKw ?? 50) : 0;
     const candidates: RouteCandidate[] = (await index())
       .corridor(route.coordinates, CORRIDOR_M, minPowerKw)
-      .map(({ site, alongM, distanceM, record }) => ({
+      .map(({ site, alongM, distanceM, summary }) => ({
         site,
         kmAlong: alongM / 1000,
         detourKm: (distanceM / 1000) * DETOUR_ROAD_FACTOR,
-        connectors: record.e.flatMap((e) =>
-          (e.c ?? []).map((c) => ({
-            standard: c.s,
-            powerType: c.p ?? null,
-            maxPowerKw: c.w,
-            tariffs: e.t ?? [],
-          })),
-        ),
+        // Conectores aproximados desde el índice (potencia DC/AC por grupo) y tarifa base.
+        connectors: summaryConnectors(summary),
       }));
     return assemblePlan(req, vehicle, route, candidates, routing.attribution);
   },

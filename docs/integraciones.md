@@ -5,7 +5,7 @@
 | **Estado en tiempo real en España** | No publicado en el NAP | Seguir el NAP de la DGT (AFIR exige datos dinámicos). Alternativa: acuerdos OCPI directos con operadores (fase 3). |
 | **Precios en España** | No publicados en el NAP | Igual que el anterior. Mientras tanto la app muestra "Precio no publicado". |
 | **Open Charge Map** | Sin implementar | Clave de API gratuita (`OCM_API_KEY`). El 7 nov 2026 `api.openchargemap.io` no respondía desde este equipo; reintentar. Útil para rellenar huecos y otros países. Revisar licencia por registro. |
-| **Otros NAP europeos** (Francia IRVE, Alemania Mobilithek, Países Bajos NDW…) | Sin implementar | Muchos usan DATEX II v3 como España y Portugal: el parser (`apps/workers/src/datex2`) ya es genérico; cada país necesita un adaptador pequeño y sus fixtures. |
+| **Otros NAP europeos** (Italia, Países Bajos NDW, Bélgica…) | Francia y Alemania ya integradas | Muchos usan DATEX II v3 como España y Portugal: el parser (`apps/workers/src/datex2`) ya es genérico; cada país necesita un adaptador pequeño y sus fixtures. |
 | **Deep links a apps de operadores** | Fallback: búsqueda en la tienda por nombre comercial | Que cada operador documente su esquema/enlace universal. Rellenar `deeplinkTemplate`, `appIosUrl` y `appAndroidPackage` en `apps/workers/src/normalize/operators.ts`. **No inventar paquetes ni enlaces.** |
 | **Nombres comerciales de operadores** | 24 curados; el resto, razón social limpiada | Ampliar el catálogo curado (por ejemplo "Charging Together" → marca comercial real, si la hay). |
 | **Mapas en producción** | Expo Go no necesita clave | Para publicar en Google Play hace falta una API key de Google Maps (ver docs de `react-native-maps` en Expo). |
@@ -19,4 +19,4 @@
 | **Catálogo de vehículos actualizado** | Open EV Data (abr 2025) | Vigilar el repositorio; valorar una fuente complementaria para modelos 2025-2026. |
 | **Planificador local + comunidad** | En modo sin servidor no se excluyen aún los cargadores marcados como averiados | Función RPC en Supabase que devuelva, para una lista de estaciones, las que tienen ≥2 averías recientes. |
 | **CAPTCHA en Supabase** | Sin activar | Turnstile o hCaptcha para los inicios de sesión anónimos antes del lanzamiento público. |
-
+| **Estado en tiempo real de Francia** | Sin implementar | Existe un IRVE dinámico consolidado en transport.data.gouv.fr: adaptador de estados como el de MOBI.E. |

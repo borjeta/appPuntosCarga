@@ -1,8 +1,10 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Pool } from '@pc/db';
 import {
   DATASET_VERSION,
+  splitByCountry,
+  type CountryEntry,
   type ConnectorRecord,
   type EvseRecord,
   type Manifest,
@@ -32,7 +34,12 @@ import type { SourceAdapter } from '../sources/types';
  */
 
 /** Prefijo corto de cada fuente para el id estable de estación. */
-export const SOURCE_PREFIX: Record<string, string> = { 'es-nap-dgt': 'es', 'pt-mobie': 'pt' };
+export const SOURCE_PREFIX: Record<string, string> = {
+  'es-nap-dgt': 'es',
+  'pt-mobie': 'pt',
+  'fr-irve': 'fr',
+  'de-bnetza': 'de',
+};
 
 export function stableId(sourceId: string, externalId: string): string {
   return `${SOURCE_PREFIX[sourceId] ?? sourceId}:${externalId}`;
@@ -296,6 +303,7 @@ export async function exportAll(
   outDir: string,
   options: { force?: boolean } = {},
 ): Promise<Manifest> {
+  await rm(outDir, { recursive: true, force: true });
   await mkdir(outDir, { recursive: true });
   const dynamic = new Set(adapters.filter((a) => a.statuses).map((a) => a.meta.id));
   const [stations, vehicles, status, sources] = await Promise.all([
@@ -304,11 +312,30 @@ export async function exportAll(
     buildStatusFile(adapters, options),
     sourcesInfo(pool),
   ]);
+
+  // v2: por país, un índice compacto y teselas de detalle (la app solo baja lo que necesita).
+  const countries: CountryEntry[] = [];
+  for (const { index, tiles } of splitByCountry(stations)) {
+    const cc = index.cc.toLowerCase();
+    const tilesPath = `tiles/${cc}`;
+    await mkdir(join(outDir, tilesPath), { recursive: true });
+    for (const tile of tiles)
+      await writeFile(join(outDir, tilesPath, `${tile.key}.json`), JSON.stringify(tile));
+    countries.push({
+      cc: index.cc,
+      count: index.rows.length,
+      generatedAt: index.generatedAt,
+      index: await writeJson(outDir, `index-${cc}.json`, index, index.rows.length),
+      tilesPath,
+      tiles: tiles.map((t) => t.key).sort(),
+    });
+  }
+
   const manifest: Manifest = {
     version: DATASET_VERSION,
     generatedAt: new Date().toISOString(),
+    countries,
     files: {
-      stations: await writeJson(outDir, 'stations.json', stations, stations.stations.length),
       vehicles: await writeJson(outDir, 'vehicles.json', vehicles, vehicles.vehicles.length),
       status: await writeJson(outDir, 'status.json', status, countStatus(status)),
     },

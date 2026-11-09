@@ -14,6 +14,9 @@ export interface FavoriteSite {
   maxPowerKw: number;
 }
 
+/** Países cuyos datos se descargan por defecto. */
+export const DEFAULT_COUNTRIES = ['ES', 'PT'];
+
 export type ThemePreference = 'system' | 'light' | 'dark';
 export type LanguagePreference = 'system' | 'es' | 'en';
 
@@ -39,6 +42,10 @@ interface AppState {
 
   /** Id anónimo del dispositivo para los avisos de la comunidad (el servidor solo guarda su hash). */
   deviceId: string;
+
+  /** Países con datos descargados en el móvil. */
+  countries: string[];
+  setCountries: (c: string[]) => void;
 
   /** Borra todo lo guardado en el dispositivo (favoritos, vehículos, filtros, preferencias). */
   resetAll: () => void;
@@ -98,6 +105,8 @@ export const useAppStore = create<AppState>()(
       setChargeWindow: (chargeWindow) => set({ chargeWindow }),
 
       deviceId: randomUUID(),
+      countries: [...DEFAULT_COUNTRIES],
+      setCountries: (countries) => set({ countries }),
       resetAll: () =>
         set({
           filters: {},
@@ -108,6 +117,7 @@ export const useAppStore = create<AppState>()(
           deviceId: randomUUID(),
           theme: 'system',
           language: 'system',
+          countries: [...DEFAULT_COUNTRIES],
         }),
 
       theme: 'system',

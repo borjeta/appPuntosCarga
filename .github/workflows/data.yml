@@ -38,14 +38,10 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: data-pages
-  cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     services:
       db:
         image: postgis/postgis:17-3.5
@@ -62,30 +58,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - id: pages
-        uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v5
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
+      # Los datos publicados (índices y miles de teselas) se guardan en la caché de Actions: así la
+      # tarea de cada 15 min solo regenera status.json sin volver a descargar todo de Pages.
+      - name: Recuperar los últimos datos generados
+        id: restore
+        uses: actions/cache/restore@v4
+        with:
+          path: site
+          key: site-v2-none
+          restore-keys: site-v2-
+
       - name: ¿Ingesta completa o solo estado?
         id: mode
         env:
-          SITE: ${{ steps.pages.outputs.base_url }}
           FORCE_FULL: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full) }}
         run: |
-          mkdir -p site
           full=true
-          if [ "$FORCE_FULL" != "true" ] && curl -sf "$SITE/manifest.json" -o site/manifest.json; then
-            generated=$(node -e "console.log(require('./site/manifest.json').files.stations.generatedAt)")
+          if [ "$FORCE_FULL" != "true" ] && [ -f site/manifest.json ]; then
+            generated=$(node -e "const m=require('./site/manifest.json');console.log(m.version===2?m.countries[0].generatedAt:'1970-01-01')")
             age=$(( $(date +%s) - $(date -d "$generated" +%s) ))
-            echo "Estaciones publicadas hace $((age / 3600)) h"
-            if [ "$age" -lt 72000 ]; then
-              curl -sf "$SITE/stations.json" -o site/stations.json && \
-              curl -sf "$SITE/vehicles.json" -o site/vehicles.json && full=false
-            fi
+            echo "Datos de estaciones generados hace $((age / 3600)) h"
+            [ "$age" -lt 72000 ] && full=false
           fi
           echo "full=$full" >> "$GITHUB_OUTPUT"
           echo "Modo: $([ "$full" = true ] && echo 'ingesta completa' || echo 'solo estado')"
@@ -99,6 +99,13 @@ jobs:
           npm run ingest -- sites all
           npm run ingest -- vehicles
           npm run ingest -- export --out "$GITHUB_WORKSPACE/site"
+
+      - name: Guardar los datos generados para las próximas ejecuciones
+        if: steps.mode.outputs.full == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: site
+          key: site-v2-${{ github.run_id }}
 
       - name: Solo estado en tiempo real
         if: steps.mode.outputs.full != 'true'
@@ -116,6 +123,12 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Solo un despliegue a la vez; uno nuevo sustituye a uno atascado o en cola. (No se bloquea el
+    # workflow entero: la ingesta completa de varios países tarda y no debe frenar el estado.)
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

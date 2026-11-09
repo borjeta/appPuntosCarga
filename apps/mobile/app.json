@@ -7,7 +7,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "description": "Todos los puntos de recarga públicos de España y Portugal en un solo mapa, con estado en tiempo real, coste estimado para tu coche y planificador de rutas.",
+    "description": "Todos los puntos de recarga públicos de España, Portugal, Francia y Alemania en un solo mapa, con estado en tiempo real, coste estimado para tu coche y planificador de rutas.",
     "githubUrl": "https://github.com/borjeta/appPuntosCarga",
     "locales": {
       "es": "./locales/es.json",
