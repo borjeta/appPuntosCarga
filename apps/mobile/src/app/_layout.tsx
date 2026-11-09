@@ -8,6 +8,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import i18n, { deviceLanguage } from '../lib/i18n';
 import { queryClient, useDataSync } from '../lib/queries';
 import { useAppStore } from '../lib/store';
+import { initAds } from '../lib/monetization/ads';
+import { initPurchases } from '../lib/monetization/purchases';
 import { useTheme } from '../lib/theme';
 
 function useLanguageSync() {
@@ -15,6 +17,18 @@ function useLanguageSync() {
   useEffect(() => {
     void i18n.changeLanguage(language === 'system' ? deviceLanguage() : language);
   }, [language]);
+}
+
+/** Compras primero (saber si es Premium) y luego anuncios solo para quien no lo es. */
+function Monetization() {
+  const premium = useAppStore((s) => s.premium);
+  useEffect(() => {
+    void initPurchases().finally(() => void initAds());
+  }, []);
+  useEffect(() => {
+    if (!premium) void initAds(); // p. ej. una suscripción que caduca
+  }, [premium]);
+  return null;
 }
 
 function DataSync() {
@@ -30,6 +44,7 @@ export default function RootLayout() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <DataSync />
+        <Monetization />
         <StatusBar style={theme.dark ? 'light' : 'dark'} />
         <Stack
           screenOptions={{
@@ -47,6 +62,10 @@ export default function RootLayout() {
             options={{ title: t('filters.title'), presentation: 'modal' }}
           />
           <Stack.Screen name="vehicles" options={{ title: t('vehicles.title') }} />
+          <Stack.Screen
+            name="premium"
+            options={{ title: t('premium.settingsTitle'), presentation: 'modal' }}
+          />
           <Stack.Screen name="sources" options={{ title: t('sources.title') }} />
         </Stack>
       </QueryClientProvider>

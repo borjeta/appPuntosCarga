@@ -10,6 +10,7 @@ import { BACKEND_MODE } from '../../lib/backend';
 import { DATA_ORIGIN, PRIVACY_URL, SUPPORT_URL } from '../../lib/config';
 import { repository } from '../../lib/data/repository';
 import { openWebsite } from '../../lib/links';
+import { adsPrivacyOptionsRequired, showAdsPrivacyOptions } from '../../lib/monetization/ads';
 import { deleteMyCommunityData } from '../../lib/supabase';
 import {
   useActiveVehicle,
@@ -26,6 +27,8 @@ export default function SettingsScreen() {
   const { theme: themePref, setTheme, language, setLanguage } = useAppStore();
   const vehicle = useActiveVehicle();
   const resetAll = useAppStore((s) => s.resetAll);
+  const premium = useAppStore((s) => s.premium);
+  const adsPrivacy = useQuery({ queryKey: ['ads-privacy'], queryFn: adsPrivacyOptionsRequired });
   const queryClient = useQueryClient();
   const countries = useAppStore((s) => s.countries);
   const setCountries = useAppStore((s) => s.setCountries);
@@ -116,6 +119,14 @@ export default function SettingsScreen() {
         </View>
       </Section>
 
+      <Section title={t('premium.settingsTitle')}>
+        {row(
+          premium ? 'diamond' : 'diamond-outline',
+          premium ? t('premium.settingsActive') : t('premium.settingsCta'),
+          () => router.push('/premium'),
+        )}
+      </Section>
+
       <Section title={t('settings.vehicles')}>
         <Pressable
           onPress={() => router.push('/vehicles')}
@@ -170,6 +181,9 @@ export default function SettingsScreen() {
           openWebsite(PRIVACY_URL),
         )}
         {row('help-buoy-outline', t('settings.support'), () => openWebsite(SUPPORT_URL))}
+        {adsPrivacy.data
+          ? row('megaphone-outline', t('premium.adsPrivacy'), () => void showAdsPrivacyOptions())
+          : null}
         {row('trash-outline', t('settings.deleteData'), confirmDelete, true)}
         <T muted variant="small">
           {t('settings.deleteDataHint')}

@@ -5,3 +5,4 @@ export * from './status';
 export * from './power';
 export * from './geo';
 export * from './community';
+export * from './monetization';

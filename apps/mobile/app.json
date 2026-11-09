@@ -104,6 +104,12 @@
             "backgroundColor": "#0E1013"
           }
         }
+      ],
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "Si lo permites, los anuncios pueden ser más relevantes para ti. No vendemos tus datos y la app funciona igual si no lo permites. Con Premium no hay anuncios."
+        }
       ]
     ]
   }

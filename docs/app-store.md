@@ -88,8 +88,14 @@ COMUNIDAD
 • Avisa si un cargador funciona o está averiado y consulta los avisos de otros conductores.
 
 PRIVACIDAD
-• Sin registro, sin publicidad y sin seguimiento. Tu ubicación se usa solo en el móvil.
+• Sin registro. Tu ubicación se usa solo en el móvil.
 • Funciona sin conexión con los últimos datos descargados.
+
+GRATIS O PREMIUM
+• La app es gratis con banners publicitarios.
+• Puntos de Carga Premium quita los anuncios: 3,00 € al mes o 19,99 € al año, con 2 semanas de prueba gratis. El pago se carga en tu cuenta de Apple; la suscripción se renueva automáticamente salvo que la canceles al menos 24 horas antes del final del periodo, desde los ajustes de tu cuenta.
+Condiciones de uso: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+Privacidad: https://borjeta.github.io/appPuntosCarga/privacidad.html
 
 Los datos proceden de los registros oficiales donde los operadores están obligados a publicar sus puntos de recarga (Reglamento UE 2023/1804): DGT (España), MOBI.E (Portugal), data.gouv.fr (Francia) y Bundesnetzagentur (Alemania).
 ```
@@ -109,7 +115,9 @@ Every public EV charging point in Spain, Portugal, France and Germany in one app
 • Pick your car from 1,200+ models and see charging time and cost.
 • Trip planner with charging stops.
 • Community reports: tell others whether a charger works.
-• No sign-up, no ads, no tracking. Works offline with the last downloaded data.
+• No sign-up. Works offline with the last downloaded data.
+• Free with banner ads. Premium removes ads: €3.00/month or €19.99/year with a 2-week free trial, charged to your Apple account; auto-renews unless cancelled at least 24 hours before the end of the period.
+Terms of use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 Data comes from the official National Access Points where operators must publish their charging points (EU Regulation 2023/1804).
 ```
@@ -123,18 +131,24 @@ Hazlas en TestFlight con un iPhone grande (o se aceptan las de 6,5"). Sugeridas,
 5. Filtros.
 
 ### 6. Privacidad de la app ("App Privacy" en App Store Connect)
-Respuestas recomendadas (revísalas: eres el responsable de lo que declares):
+Respuestas recomendadas (revísalas: eres el responsable de lo que declares; Google publica cómo declarar
+AdMob en https://developers.google.com/admob/ios/privacy/data-disclosure):
 - **¿Recoges datos?** Sí.
-- **Ubicación → Ubicación precisa**: Funcionalidad de la app · No vinculada a la identidad · No usada para
-  seguimiento. *(La posición se envía a OSRM/Photon al planificar rutas o buscar lugares.)*
-- **Contenido del usuario → Otro contenido del usuario** (avisos de la comunidad): Funcionalidad de la
-  app · No vinculado a la identidad · No usado para seguimiento.
-- **Identificadores → ID de usuario** (cuenta anónima de Supabase): Funcionalidad de la app · No vinculado
-  a la identidad · No usado para seguimiento.
-- **Seguimiento (App Tracking Transparency)**: No.
+- **Ubicación → Ubicación precisa**: Funcionalidad de la app · No vinculada · Sin seguimiento.
+- **Ubicación → Ubicación aproximada**: Publicidad de terceros · No vinculada · **Seguimiento: sí** (AdMob, IP).
+- **Identificadores → ID del dispositivo** (IDFA): Publicidad de terceros · No vinculado · **Seguimiento: sí**
+  (solo si el usuario lo permite en el aviso de seguimiento).
+- **Identificadores → ID de usuario** (cuenta anónima de Supabase y RevenueCat): Funcionalidad de la app ·
+  No vinculado · Sin seguimiento.
+- **Compras → Historial de compras** (RevenueCat): Funcionalidad de la app · No vinculado · Sin seguimiento.
+- **Datos de uso → Interacción con el producto / Datos de publicidad** (AdMob): Publicidad de terceros,
+  Analítica · No vinculado · Seguimiento: sí.
+- **Diagnóstico → Datos de fallos y de rendimiento** (AdMob): Publicidad de terceros · No vinculado.
+- **Contenido del usuario → Otro contenido** (avisos de la comunidad): Funcionalidad de la app · No vinculado.
 
 ### 7. Clasificación por edades y notas para la revisión
 - Cuestionario de edad: todo "Ninguno" → **4+**. Contenido generado por usuarios: no (solo avisos predefinidos).
+  Publicidad: sí (banners). Compras dentro de la app: sí.
 - **Notas para el revisor** (pegar):
 ```
 No account or login is required. Location permission is optional (only "while using the app").
@@ -143,6 +157,63 @@ To try the trip planner: Trips tab → add a vehicle (e.g. "Tesla Model 3") → 
 Community reports are anonymous and limited to predefined types (no free text).
 Settings → Privacy → Delete my data deletes the anonymous account and all its data.
 Data source: official EU National Access Points for EV charging (Regulation 2023/1804).
+```
+
+## Suscripción Premium y anuncios
+
+Modelo elegido: **gratis con banners; Premium (3,00 €/mes o 19,99 €/año, 2 semanas de prueba gratis) quita
+los anuncios.** El resto de funciones es igual para todos. Apple se queda un 15 % si te apuntas al
+[Small Business Program](https://developer.apple.com/app-store/small-business-program/) (si no, un 30 %
+el primer año de cada suscriptor).
+
+### A. App Store Connect
+1. **Acuerdos, impuestos y banca**: firma el acuerdo de *Apps de pago* y rellena datos bancarios y fiscales
+   (sin esto no se pueden vender suscripciones).
+2. La app → **Suscripciones** → crea el grupo `Premium` con dos suscripciones:
+   - `puntoscarga_premium_monthly` · 1 mes · 3,00 € (o 2,99 € si prefieres terminar en ,99)
+   - `puntoscarga_premium_annual` · 1 año · 19,99 €
+   - En ambas: **Oferta introductoria → Prueba gratuita → 2 semanas**.
+   - Nombre visible y descripción ("Sin anuncios") en español e inglés, y una captura de la pantalla Premium.
+3. Añade las suscripciones a la primera versión antes de enviarla a revisión.
+
+### B. RevenueCat (gratis hasta 2.500 $ de ingresos al mes)
+1. Crea el proyecto en https://app.revenuecat.com y añade la app de iOS (bundle `com.borjeta.puntoscarga`)
+   con la clave de App Store Connect que te pida (*In-App Purchase key*).
+2. Productos: importa los dos anteriores. **Entitlement** `premium` con ambos productos.
+3. **Offering** `default` (actual) con los paquetes *Monthly* y *Annual*.
+4. Copia la *Public API key* de iOS (empieza por `appl_`).
+
+### C. Google AdMob
+1. Crea la app en https://apps.admob.com (iOS, enlazada con la de la App Store cuando esté publicada) y
+   una unidad de **Banner**. Apunta el *App ID* (`ca-app-pub-…~…`) y el *Ad unit ID* (`ca-app-pub-…/…`).
+2. **Privacidad y mensajes**: crea el mensaje **RGPD** (obligatorio en la UE) y el mensaje explicativo
+   **IDFA** para iOS. Sin el mensaje RGPD, en Europa no se servirán anuncios.
+3. **app-ads.txt**: AdMob lo exige en la web de desarrollador. Debe estar en la raíz de un dominio
+   (`https://borjeta.github.io/app-ads.txt` → requiere un repositorio `borjeta.github.io`, o un dominio
+   propio). Pon esa web como *Marketing URL* en App Store Connect.
+
+### D. Variables para la compilación (EAS)
+```bash
+cd apps/mobile
+npx eas-cli@latest env:create --name EXPO_PUBLIC_REVENUECAT_IOS_KEY --value appl_xxx --environment production --visibility plaintext
+npx eas-cli@latest env:create --name EXPO_PUBLIC_ADMOB_BANNER_IOS --value ca-app-pub-xxx/yyy --environment production --visibility plaintext
+npx eas-cli@latest env:create --name ADMOB_IOS_APP_ID --value ca-app-pub-xxx~zzz --environment production --visibility plaintext
+```
+Sin ellas la app compila igual: sin compras y con **anuncios de prueba** de Google (no facturan).
+
+### E. Probar antes de publicar
+- Las compras y los anuncios **no funcionan en Expo Go**: usa una compilación de TestFlight o de desarrollo
+  (`npx eas-cli build -p ios --profile development`).
+- En TestFlight las compras son de prueba (*sandbox*): no se cobra nada. Prueba comprar, cancelar y
+  "Restaurar compras".
+- Comprueba que tras suscribirte desaparece el banner y que en Ajustes → Privacidad aparece
+  "Privacidad de los anuncios".
+
+### F. Notas para la revisión (añadir)
+```
+Monetization: free with banner ads (Google AdMob, with UMP consent and ATT). The optional auto-renewable
+subscription "Premium" (monthly / yearly, 2-week free trial) only removes ads; all features are free.
+Restore Purchases: Settings → Premium → Restore purchases.
 ```
 
 ## Riesgos conocidos antes de lanzar

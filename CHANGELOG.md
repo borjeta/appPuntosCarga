@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.5.0 — 9 nov 2026 · Premium y anuncios
+
+- Modelo: gratis con banners de Google AdMob; **Premium** (3 €/mes o 19,99 €/año, 2 semanas gratis) quita
+  los anuncios. Compras con RevenueCat (sin servidor propio).
+- Banner adaptativo encima de las pestañas; consentimiento europeo (UMP) y permiso de seguimiento de Apple
+  (ATT) antes de cargar anuncios; "Privacidad de los anuncios" en Ajustes.
+- Pantalla Premium con planes, prueba gratis, condiciones de renovación, restaurar compras y enlaces legales.
+- Política de privacidad y guía de la App Store actualizadas (configuración de App Store Connect,
+  RevenueCat y AdMob, y respuestas de privacidad).
+
 ## 0.4.0 — 9 nov 2026 · Francia, Alemania y preparación para la App Store
 
 ### Datos: escala europea

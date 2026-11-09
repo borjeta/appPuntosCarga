@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import { BottomTabBar } from 'expo-router/tabs';
 import type { ComponentProps } from 'react';
 import { useTranslation } from 'react-i18next';
+import { AdBanner } from '../../components/AdBanner';
 import { useTheme } from '../../lib/theme';
 
 type IconName = ComponentProps<typeof Ionicons>['name'];
@@ -16,6 +18,13 @@ export default function TabsLayout() {
   const theme = useTheme();
   return (
     <Tabs
+      // Banner (solo para no Premium) justo encima de las pestañas: no tapa el mapa ni el contenido.
+      tabBar={(props) => (
+        <>
+          <AdBanner />
+          <BottomTabBar {...props} />
+        </>
+      )}
       screenOptions={{
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textMuted,

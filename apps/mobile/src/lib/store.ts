@@ -43,6 +43,10 @@ interface AppState {
   /** Id anónimo del dispositivo para los avisos de la comunidad (el servidor solo guarda su hash). */
   deviceId: string;
 
+  /** Suscripción Premium activa (copia local; la fuente de verdad es la tienda vía RevenueCat). */
+  premium: boolean;
+  setPremium: (p: boolean) => void;
+
   /** Países con datos descargados en el móvil. */
   countries: string[];
   setCountries: (c: string[]) => void;
@@ -105,6 +109,8 @@ export const useAppStore = create<AppState>()(
       setChargeWindow: (chargeWindow) => set({ chargeWindow }),
 
       deviceId: randomUUID(),
+      premium: false,
+      setPremium: (premium) => set({ premium }),
       countries: [...DEFAULT_COUNTRIES],
       setCountries: (countries) => set({ countries }),
       resetAll: () =>

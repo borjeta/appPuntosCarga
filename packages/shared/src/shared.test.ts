@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   connectorGroupOf,
+  annualSavingsPercent,
   countActiveFilters,
+  freeTrialDays,
   expandBBox,
   indexPolyline,
   locateOnPolyline,
@@ -177,5 +179,18 @@ describe('polilíneas', () => {
     expect(w).toBeLessThan(-3.71);
     expect(e).toBeGreaterThan(-3.7);
     expect(s).toBeLessThan(40.3);
+  });
+});
+
+describe('Premium', () => {
+  it('calcula los días de prueba gratis', () => {
+    expect(freeTrialDays({ price: 0, periodNumberOfUnits: 2, periodUnit: 'WEEK' })).toBe(14);
+    expect(freeTrialDays({ price: 0, periodNumberOfUnits: 14, periodUnit: 'day' })).toBe(14);
+    expect(freeTrialDays({ price: 0.99, periodNumberOfUnits: 1, periodUnit: 'MONTH' })).toBeNull();
+    expect(freeTrialDays(null)).toBeNull();
+  });
+  it('ahorro del plan anual', () => {
+    expect(annualSavingsPercent(3, 19.99)).toBe(44);
+    expect(annualSavingsPercent(0, 19.99)).toBe(0);
   });
 });

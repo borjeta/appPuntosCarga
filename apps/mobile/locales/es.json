@@ -1,7 +1,8 @@
 {
   "ios": {
     "CFBundleDisplayName": "Puntos de Carga",
-    "NSLocationWhenInUseUsageDescription": "Usamos tu ubicación solo mientras usas la app, para mostrarte los puntos de recarga cercanos, la distancia hasta ellos y como origen de tus rutas. No se guarda en ningún servidor."
+    "NSLocationWhenInUseUsageDescription": "Usamos tu ubicación solo mientras usas la app, para mostrarte los puntos de recarga cercanos, la distancia hasta ellos y como origen de tus rutas. No se guarda en ningún servidor.",
+    "NSUserTrackingUsageDescription": "Si lo permites, los anuncios pueden ser más relevantes para ti. No vendemos tus datos y la app funciona igual si no lo permites. Con Premium no hay anuncios."
   },
   "android": {
     "app_name": "Puntos de Carga"
