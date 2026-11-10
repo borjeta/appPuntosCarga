@@ -9,7 +9,6 @@ import i18n, { deviceLanguage } from '../lib/i18n';
 import { queryClient, useDataSync } from '../lib/queries';
 import { useAppStore } from '../lib/store';
 import { initAds } from '../lib/monetization/ads';
-import { initPurchases } from '../lib/monetization/purchases';
 import { useTheme } from '../lib/theme';
 import { useUpdateRequired } from '../lib/update';
 import { UpdateRequired } from '../components/UpdateRequired';
@@ -21,15 +20,11 @@ function useLanguageSync() {
   }, [language]);
 }
 
-/** Compras primero (saber si es Premium) y luego anuncios solo para quien no lo es. */
+/** App gratuita con publicidad: los anuncios se inicializan al arrancar. */
 function Monetization() {
-  const premium = useAppStore((s) => s.premium);
   useEffect(() => {
-    void initPurchases().finally(() => void initAds());
+    void initAds();
   }, []);
-  useEffect(() => {
-    if (!premium) void initAds(); // p. ej. una suscripción que caduca
-  }, [premium]);
   return null;
 }
 
@@ -68,10 +63,6 @@ export default function RootLayout() {
               options={{ title: t('filters.title'), presentation: 'modal' }}
             />
             <Stack.Screen name="vehicles" options={{ title: t('vehicles.title') }} />
-            <Stack.Screen
-              name="premium"
-              options={{ title: t('premium.settingsTitle'), presentation: 'modal' }}
-            />
             <Stack.Screen name="sources" options={{ title: t('sources.title') }} />
           </Stack>
         )}

@@ -38,11 +38,6 @@ function Banner() {
         unitId={ADMOB_BANNER_ID ?? ads.TestIds.ADAPTIVE_BANNER}
         size={ads.BannerAdSize.LARGE_ANCHORED_ADAPTIVE_BANNER}
       />
-      <Pressable onPress={() => router.push('/premium')} hitSlop={8} accessibilityRole="button">
-        <T variant="small" style={{ color: theme.primary, paddingVertical: 2 }}>
-          {t('premium.removeAds')}
-        </T>
-      </Pressable>
     </View>
   );
 }

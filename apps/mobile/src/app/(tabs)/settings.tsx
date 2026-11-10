@@ -119,14 +119,6 @@ export default function SettingsScreen() {
         </View>
       </Section>
 
-      <Section title={t('premium.settingsTitle')}>
-        {row(
-          premium ? 'diamond' : 'diamond-outline',
-          premium ? t('premium.settingsActive') : t('premium.settingsCta'),
-          () => router.push('/premium'),
-        )}
-      </Section>
-
       <Section title={t('settings.vehicles')}>
         <Pressable
           onPress={() => router.push('/vehicles')}
