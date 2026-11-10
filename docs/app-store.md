@@ -221,3 +221,16 @@ Restore Purchases: Settings → Premium → Restore purchases.
   usar instancias propias o un proveedor con clave (ver `docs/integraciones.md`).
 - **CAPTCHA** en los inicios de sesión anónimos de Supabase, contra abusos.
 - **Android / Google Play**: para el mapa hace falta una clave de Google Maps (iOS usa Apple Maps y no la necesita).
+
+## Forzar la actualización de la app
+
+La app comprueba al arrancar `web/version.json` (publicado en GitHub Pages). Si la versión instalada es
+anterior a `minVersion`, muestra una pantalla que solo deja ir a la App Store. Sin conexión no bloquea.
+
+Para obligar a actualizar a todos:
+1. Sube la versión en `apps/mobile/app.json` (`version`) y compila y envía la nueva build a App Store Connect.
+2. Cuando la nueva versión esté aprobada y publicada, cambia `minVersion` en `web/version.json` a esa
+   versión y haz push. Los usuarios con una versión anterior verán la pantalla de actualización.
+
+No cambies `minVersion` antes de que la nueva versión esté disponible en la App Store, o los usuarios
+quedarán bloqueados sin poder actualizar.

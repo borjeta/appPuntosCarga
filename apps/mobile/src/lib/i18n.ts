@@ -219,6 +219,11 @@ const es = {
       OTHER: 'Otro',
     },
   },
+  update: {
+    title: 'Hay una versión nueva',
+    body: 'Para seguir usando Puntos de Carga, actualiza la app a la última versión desde la App Store.',
+    button: 'Actualizar',
+  },
   premium: {
     title: 'Puntos de Carga Premium',
     removeAds: 'Quitar anuncios',
@@ -540,6 +545,11 @@ const en: Dict = {
       NOT_EXISTS: 'Charger does not exist',
       OTHER: 'Other',
     },
+  },
+  update: {
+    title: 'A new version is available',
+    body: 'To keep using Charging Points, update the app to the latest version from the App Store.',
+    button: 'Update',
   },
   premium: {
     title: 'Charging Points Premium',

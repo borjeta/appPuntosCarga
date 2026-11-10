@@ -11,6 +11,8 @@ import { useAppStore } from '../lib/store';
 import { initAds } from '../lib/monetization/ads';
 import { initPurchases } from '../lib/monetization/purchases';
 import { useTheme } from '../lib/theme';
+import { useUpdateRequired } from '../lib/update';
+import { UpdateRequired } from '../components/UpdateRequired';
 
 function useLanguageSync() {
   const language = useAppStore((s) => s.language);
@@ -40,34 +42,39 @@ export default function RootLayout() {
   useLanguageSync();
   const theme = useTheme();
   const { t } = useTranslation();
+  const updateRequired = useUpdateRequired();
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <DataSync />
         <Monetization />
         <StatusBar style={theme.dark ? 'light' : 'dark'} />
-        <Stack
-          screenOptions={{
-            headerStyle: { backgroundColor: theme.surface },
-            headerTintColor: theme.primary,
-            headerTitleStyle: { color: theme.text },
-            contentStyle: { backgroundColor: theme.bg },
-            headerBackButtonDisplayMode: 'minimal',
-          }}
-        >
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="location/[id]" options={{ title: t('detail.title') }} />
-          <Stack.Screen
-            name="filters"
-            options={{ title: t('filters.title'), presentation: 'modal' }}
-          />
-          <Stack.Screen name="vehicles" options={{ title: t('vehicles.title') }} />
-          <Stack.Screen
-            name="premium"
-            options={{ title: t('premium.settingsTitle'), presentation: 'modal' }}
-          />
-          <Stack.Screen name="sources" options={{ title: t('sources.title') }} />
-        </Stack>
+        {updateRequired ? (
+          <UpdateRequired />
+        ) : (
+          <Stack
+            screenOptions={{
+              headerStyle: { backgroundColor: theme.surface },
+              headerTintColor: theme.primary,
+              headerTitleStyle: { color: theme.text },
+              contentStyle: { backgroundColor: theme.bg },
+              headerBackButtonDisplayMode: 'minimal',
+            }}
+          >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="location/[id]" options={{ title: t('detail.title') }} />
+            <Stack.Screen
+              name="filters"
+              options={{ title: t('filters.title'), presentation: 'modal' }}
+            />
+            <Stack.Screen name="vehicles" options={{ title: t('vehicles.title') }} />
+            <Stack.Screen
+              name="premium"
+              options={{ title: t('premium.settingsTitle'), presentation: 'modal' }}
+            />
+            <Stack.Screen name="sources" options={{ title: t('sources.title') }} />
+          </Stack>
+        )}
       </QueryClientProvider>
     </SafeAreaProvider>
   );
