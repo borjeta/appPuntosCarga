@@ -1,0 +1,137 @@
+# Publica los datos de la app (estaciones, vehículos y estado en tiempo real) en GitHub Pages.
+#
+#  · Cada 15 min refresca el estado en tiempo real (status.json, ~80 KB comprimido).
+#  · Si los datos publicados tienen más de 20 h, si se lanza a mano con "completa" o si cambia el
+#    código de ingesta (push), hace la
+#    ingesta completa con un PostGIS temporal dentro de la propia máquina de GitHub.
+#
+# Requisitos (ver README → "Publicar sin servidor"):
+#  · Settings → Pages → Source: "GitHub Actions".
+#  · Repositorio público (Pages y minutos de Actions gratis). Con repositorio privado, cambia el
+#    cron a cada hora o menos para no agotar los 2.000 minutos/mes del plan gratuito.
+#  · GitHub desactiva los workflows programados tras 60 días sin actividad en el repositorio.
+
+name: Datos
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  # Republica (ingesta completa) cuando cambia el código que genera los datos.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/data.yml'
+      - 'apps/workers/**'
+      - 'packages/shared/**'
+      - 'packages/dataset/**'
+      - 'packages/db/**'
+      - 'web/**'
+  workflow_dispatch:
+    inputs:
+      full:
+        description: 'Ingesta completa (estaciones y vehículos), no solo el estado'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    services:
+      db:
+        image: postgis/postgis:17-3.5
+        env:
+          POSTGRES_USER: pc
+          POSTGRES_PASSWORD: pc_dev_password
+          POSTGRES_DB: puntos_carga
+        ports: ['5433:5432']
+        options: >-
+          --health-cmd "pg_isready -U pc -d puntos_carga"
+          --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      DATABASE_URL: postgres://pc:pc_dev_password@localhost:5433/puntos_carga
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # Los datos publicados (índices y miles de teselas) se guardan en la caché de Actions: así la
+      # tarea de cada 15 min solo regenera status.json sin volver a descargar todo de Pages.
+      - name: Recuperar los últimos datos generados
+        id: restore
+        uses: actions/cache/restore@v4
+        with:
+          path: site
+          key: site-v2-none
+          restore-keys: site-v2-
+
+      - name: ¿Ingesta completa o solo estado?
+        id: mode
+        env:
+          FORCE_FULL: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.full) }}
+        run: |
+          full=true
+          if [ "$FORCE_FULL" != "true" ] && [ -f site/manifest.json ]; then
+            generated=$(node -e "const m=require('./site/manifest.json');console.log(m.version===2?m.countries[0].generatedAt:'1970-01-01')")
+            age=$(( $(date +%s) - $(date -d "$generated" +%s) ))
+            echo "Datos de estaciones generados hace $((age / 3600)) h"
+            [ "$age" -lt 72000 ] && full=false
+          fi
+          echo "full=$full" >> "$GITHUB_OUTPUT"
+          echo "Modo: $([ "$full" = true ] && echo 'ingesta completa' || echo 'solo estado')"
+
+      - run: npm ci
+
+      - name: Ingesta completa y exportación
+        if: steps.mode.outputs.full == 'true'
+        run: |
+          npm run db:migrate
+          npm run ingest -- sites all
+          npm run ingest -- vehicles
+          npm run ingest -- export --out "$GITHUB_WORKSPACE/site"
+
+      - name: Guardar los datos generados para las próximas ejecuciones
+        if: steps.mode.outputs.full == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: site
+          key: site-v2-${{ github.run_id }}
+
+      - name: Solo estado en tiempo real
+        if: steps.mode.outputs.full != 'true'
+        run: |
+          npm run build:packages
+          npm run ingest -w @pc/workers -- export-status --out "$GITHUB_WORKSPACE/site"
+
+      - name: Páginas web (inicio, privacidad, soporte)
+        run: cp -r web/. site/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Solo un despliegue a la vez; uno nuevo sustituye a uno atascado o en cola. (No se bloquea el
+    # workflow entero: la ingesta completa de varios países tarda y no debe frenar el estado.)
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
