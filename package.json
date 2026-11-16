@@ -1,0 +1,21 @@
+{
+  "name": "puntos-carga-datos",
+  "private": true,
+  "description": "Ingesta y publicación de datos abiertos de puntos de recarga (ES, PT, FR, DE) en GitHub Pages",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:packages": "tsc -b packages/shared packages/pricing packages/dataset packages/planner packages/db",
+    "db:migrate": "npm run build:packages && npm run migrate -w @pc/db",
+    "ingest": "npm run build:packages && npm run ingest -w @pc/workers --"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "5.9.3"
+  }
+}
