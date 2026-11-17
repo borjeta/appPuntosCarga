@@ -1,0 +1,101 @@
+# Capturas de pantalla de la app en un simulador de iPhone (6,9") dentro de un runner macOS.
+#
+# Vive en el repositorio público porque allí los runners macOS son gratis; NO contiene código de la app:
+# la app compilada para simulador se descarga de EAS en cada ejecución desde la URL guardada en el
+# secreto APP_URL (así no aparece en los registros públicos). Solo hay flujos de Maestro (pruebas de
+# interfaz). Los artefactos son solo las imágenes y el log de Maestro, y caducan a 1 día.
+#
+# Uso: gh secret set APP_URL --repo borjeta/appPuntosCarga   (URL del .tar.gz del build de simulador)
+#      gh workflow run capturas.yml --repo borjeta/appPuntosCarga -f flows='0[1-4]*.yaml'
+
+name: Capturas iOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      flows:
+        description: 'Flujos de Maestro a ejecutar (patrón dentro de capturas-ios/)'
+        type: string
+        default: '0[1-4]*.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  capturas:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    env:
+      APP_URL: ${{ secrets.APP_URL }}
+      FLOWS: ${{ inputs.flows }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comprobar el secreto APP_URL
+        run: |
+          if [ -z "$APP_URL" ]; then
+            echo "::error::Falta el secreto APP_URL (URL del .tar.gz del build de simulador de EAS)."
+            exit 1
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Instalar Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Crear y arrancar el simulador (iPhone Pro Max, español, Madrid)
+        run: |
+          RUNTIME=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform=="iOS" and .isAvailable)] | last | .identifier')
+          DEVTYPE=$(xcrun simctl list devicetypes -j | jq -r '[.devicetypes[] | select(.name=="iPhone 17 Pro Max" or .name=="iPhone 16 Pro Max")] | last | .identifier')
+          echo "Runtime: $RUNTIME · Dispositivo: $DEVTYPE"
+          UDID=$(xcrun simctl create capturas "$DEVTYPE" "$RUNTIME")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          # Idioma y región en español; hay que reiniciar para que se apliquen.
+          xcrun simctl spawn "$UDID" defaults write NSGlobalDomain AppleLanguages -array es
+          xcrun simctl spawn "$UDID" defaults write NSGlobalDomain AppleLocale -string es_ES
+          xcrun simctl shutdown "$UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl location "$UDID" set 40.4168,-3.7038
+          # Barra de estado limpia, como en las capturas de Apple.
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 \
+            --cellularMode active --cellularBars 4 --wifiBars 3 --operatorName ""
+
+      - name: Instalar la app
+        run: |
+          mkdir -p app
+          curl -fsSL "$APP_URL" -o app.tar.gz
+          tar -xzf app.tar.gz -C app
+          APP=$(find app -maxdepth 2 -name '*.app' | head -n 1)
+          echo "Instalando la app"
+          xcrun simctl install "$UDID" "$APP"
+          rm -rf app app.tar.gz
+
+      - name: Ejecutar los flujos de Maestro
+        run: |
+          mkdir -p out
+          cd out
+          for f in ../capturas-ios/$FLOWS; do
+            n=$(basename "$f" .yaml)
+            echo "::group::$n"
+            maestro --device "$UDID" test --debug-output "debug-$n" --flatten-debug-output "$f" || echo "::warning::Falló el flujo $n"
+            echo "::endgroup::"
+          done
+
+      # Solo imágenes y log de Maestro (sin logs del simulador ni jerarquías de pantalla).
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-ios
+          path: |
+            out/**/takeScreenshot/*.png
+            out/**/maestro.log
+          retention-days: 1
+          if-no-files-found: warn

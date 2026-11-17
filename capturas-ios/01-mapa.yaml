@@ -1,0 +1,24 @@
+appId: com.borjeta.puntoscarga
+---
+- launchApp:
+    clearState: true
+    permissions:
+      location: inuse
+      notifications: allow
+- runFlow: sub/esperar-mapa.yaml
+- runFlow: sub/pausa.yaml
+- takeScreenshot: depuracion-01-inicio
+# Centra el mapa en la ubicación simulada (Madrid) y espera a que lleguen estaciones.
+- tapOn: "Mi ubicación"
+- runFlow: sub/pausa.yaml
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 01-mapa
+# Variante con una estación seleccionada.
+- tapOn:
+    id: "map-search"
+- inputText: "Atocha"
+- runFlow: sub/pausa.yaml
+- tapOn:
+    id: "search-result-0"
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 01b-mapa-estacion

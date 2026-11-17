@@ -1,0 +1,31 @@
+appId: com.borjeta.puntoscarga
+---
+# La búsqueda ordena por cercanía al centro del mapa: se simula estar en Lisboa.
+- setLocation:
+    latitude: 38.7223
+    longitude: -9.1393
+- runFlow: sub/abrir.yaml
+- runFlow: sub/vehiculo.yaml
+- tapOn: ".*Mapa.*"
+- runFlow: sub/pausa.yaml
+- tapOn: "Mi ubicación"
+- runFlow: sub/pausa.yaml
+- runFlow: sub/pausa.yaml
+- tapOn:
+    id: "map-search"
+- inputText: "Lisboa"
+- runFlow: sub/pausa.yaml
+- takeScreenshot: depuracion-02-busqueda
+- tapOn:
+    id: "search-result-0"
+- runFlow: sub/pausa.yaml
+- tapOn: ".*Ver detalles.*"
+- runFlow: sub/pausa.yaml
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 02-estacion-lisboa
+- scrollUntilVisible:
+    element: ".*Estimación para tu coche.*"
+    direction: DOWN
+    timeout: 20000
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 03-estimacion

@@ -1,0 +1,11 @@
+# Pantalla Premium (suscripción de RevenueCat) desde Ajustes.
+appId: com.borjeta.puntoscarga
+---
+- runFlow: sub/abrir.yaml
+- tapOn: ".*Ajustes.*"
+- runFlow: sub/pausa.yaml
+- takeScreenshot: premium-1-ajustes
+- tapOn: ".*Quitar anuncios.*"
+- runFlow: sub/pausa.yaml
+- runFlow: sub/pausa.yaml
+- takeScreenshot: premium-2-pantalla

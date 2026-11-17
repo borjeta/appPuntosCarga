@@ -1,0 +1,27 @@
+appId: com.borjeta.puntoscarga
+---
+- runFlow: sub/abrir.yaml
+- runFlow: sub/vehiculo.yaml
+- tapOn: ".*Rutas.*"
+- tapOn:
+    id: "place-from"
+- inputText: "Madrid"
+- runFlow: sub/pausa.yaml
+- tapOn:
+    id: "place-from-result-0"
+- tapOn:
+    id: "place-to"
+- inputText: "Málaga"
+- runFlow: sub/pausa.yaml
+- tapOn:
+    id: "place-to-result-0"
+- takeScreenshot: depuracion-03-formulario
+- tapOn: ".*Planificar.*"
+- extendedWaitUntil:
+    visible: ".*(parada|sin parar).*"
+    timeout: 90000
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 04-ruta
+- scroll
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 04b-ruta-paradas

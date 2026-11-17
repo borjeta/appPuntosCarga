@@ -1,0 +1,9 @@
+# Arranca la app y espera a que cargue el mapa. Los flujos que necesitan estado limpio lo piden aparte.
+appId: com.borjeta.puntoscarga
+---
+- launchApp:
+    permissions:
+      location: inuse
+      notifications: allow
+- runFlow: esperar-mapa.yaml
+- runFlow: pausa.yaml

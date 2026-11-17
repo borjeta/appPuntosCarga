@@ -1,0 +1,21 @@
+# Deja un coche activo (Tesla Model 3) si todavía no hay ninguno. Termina en la pestaña Rutas.
+appId: com.borjeta.puntoscarga
+---
+- tapOn: ".*Rutas.*"
+- runFlow:
+    when:
+      visible: ".*Elige tu vehículo.*"
+    commands:
+      - tapOn: ".*Elige tu vehículo.*"
+      - tapOn:
+          id: "vehicle-search"
+      - inputText: "Tesla Model 3"
+      - runFlow: pausa.yaml
+      - tapOn:
+          id: "vehicle-result-0"
+      - runFlow: pausa.yaml
+      # Volver atrás con el gesto de borde izquierdo de iOS.
+      - swipe:
+          start: "1%, 50%"
+          end: "80%, 50%"
+      - runFlow: pausa.yaml

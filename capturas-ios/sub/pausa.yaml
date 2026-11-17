@@ -1,0 +1,9 @@
+# Espera ~10-15 s (datos, teselas del mapa, geocodificador): Maestro no tiene "sleep", así que se
+# busca un texto que no existe con "optional" y se sigue cuando se agota la espera.
+appId: com.borjeta.puntoscarga
+---
+- tapOn:
+    text: "ZZZ_NO_EXISTE_ZZZ"
+    optional: true
+- waitForAnimationToEnd:
+    timeout: 4000

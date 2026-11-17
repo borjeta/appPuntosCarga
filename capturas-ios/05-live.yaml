@@ -1,0 +1,44 @@
+# Comprueba el bloqueo de la disponibilidad en tiempo real (versión gratuita) y el anuncio bonificado.
+# Requiere el build "simulator-live" (sin EXPO_PUBLIC_HIDE_ADS).
+appId: com.borjeta.puntoscarga
+---
+- setLocation:
+    latitude: 38.7223
+    longitude: -9.1393
+- launchApp:
+    clearState: true
+    permissions:
+      location: inuse
+      notifications: allow
+- runFlow: sub/esperar-mapa.yaml
+- runFlow: sub/pausa.yaml
+- tapOn: "Mi ubicación"
+- runFlow: sub/pausa.yaml
+- tapOn:
+    id: "map-search"
+- inputText: "Lisboa"
+- runFlow: sub/pausa.yaml
+- runFlow: sub/pausa.yaml
+- takeScreenshot: live-1-busqueda-bloqueada
+- tapOn:
+    id: "search-result-0"
+- runFlow: sub/pausa.yaml
+- takeScreenshot: live-2-tarjeta-bloqueada
+- tapOn: ".*Ver detalles.*"
+- runFlow: sub/pausa.yaml
+- takeScreenshot: live-3-ficha-bloqueada
+- tapOn: ".*Ver disponibilidad.*"
+- runFlow: sub/pausa.yaml
+- takeScreenshot: live-5-anuncio-bonificado
+# El anuncio de prueba dura unos segundos y luego deja cerrarlo.
+- runFlow: sub/pausa.yaml
+- runFlow: sub/pausa.yaml
+- takeScreenshot: live-6-anuncio-fin
+- tapOn:
+    text: "(Close|Cerrar|Close Ad|X)"
+    optional: true
+- tapOn:
+    point: "92%, 7%"
+    optional: true
+- runFlow: sub/pausa.yaml
+- takeScreenshot: live-7-despues-del-anuncio

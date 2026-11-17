@@ -1,0 +1,12 @@
+# Espera a que cargue el mapa aunque el aviso previo de AdMob / el de seguimiento salga con retraso.
+appId: com.borjeta.puntoscarga
+---
+- extendedWaitUntil:
+    visible: "(Continue|Continuar|Buscar estación.*)"
+    timeout: 90000
+- runFlow: dialogos.yaml
+- runFlow: pausa.yaml
+- runFlow: dialogos.yaml
+- extendedWaitUntil:
+    visible: "Buscar estación.*"
+    timeout: 60000

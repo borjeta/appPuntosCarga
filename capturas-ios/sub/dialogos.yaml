@@ -1,0 +1,12 @@
+# Cierra los avisos que puedan salir al arrancar: mensaje previo de AdMob, seguimiento ATT y ubicación.
+appId: com.borjeta.puntoscarga
+---
+- tapOn:
+    text: "(Continue|Continuar)"
+    optional: true
+- tapOn:
+    text: "(Pedir a la app que no rastree|Ask App Not to Track)"
+    optional: true
+- tapOn:
+    text: "(Permitir al usar la app|Allow While Using App)"
+    optional: true

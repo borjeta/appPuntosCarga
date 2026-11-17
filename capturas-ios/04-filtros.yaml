@@ -1,0 +1,7 @@
+appId: com.borjeta.puntoscarga
+---
+- runFlow: sub/abrir.yaml
+- tapOn: ".*Mapa.*"
+- tapOn: ".*Filtros.*"
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 05-filtros
