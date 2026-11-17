@@ -2,7 +2,8 @@
 #
 #  · Se ejecuta una vez cada 2 días (04:00 UTC, los días impares del mes). Como pasan más de 20 h
 #    entre ejecuciones, cada una hace la ingesta completa con un PostGIS temporal dentro de la
-#    propia máquina de GitHub. El estado en tiempo real (status.json) se actualiza solo con ella.
+#    propia máquina de GitHub. El estado en tiempo real lo refresca cada hora el workflow «Estado»
+#    (la app oculta estados con más de 90 min).
 #  · También se ejecuta si se lanza a mano con "completa" o si cambia el código de ingesta (push).
 #
 # Requisitos (ver README → "Publicar sin servidor"):

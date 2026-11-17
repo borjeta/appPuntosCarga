@@ -1,0 +1,75 @@
+# Refresca solo el estado en tiempo real (status.json) cada hora y republica el sitio.
+#
+# Es lo más ligero posible: no hay ingesta ni base de datos; reutiliza las estaciones y vehículos de la
+# última ingesta completa (workflow «Datos», cada 2 días), que quedan en la caché de Actions, y solo
+# descarga el estado de las fuentes con tiempo real. La app oculta un estado con más de 90 min
+# (STATUS_MAX_AGE_MS en packages/shared), por eso una ejecución por hora basta.
+
+name: Estado
+
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Recuperar los últimos datos generados por «Datos»
+        uses: actions/cache/restore@v4
+        with:
+          path: site
+          key: site-v2-none
+          restore-keys: site-v2-
+
+      - name: Comprobar que hay datos de estaciones
+        run: |
+          if [ ! -f site/manifest.json ]; then
+            echo "::error::Aún no hay datos completos en la caché: lanza antes el workflow «Datos»."
+            exit 1
+          fi
+
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Estado en tiempo real
+        run: |
+          npm run build:packages
+          npm run ingest -w @pc/workers -- export-status --out "$GITHUB_WORKSPACE/site"
+
+      - name: Páginas web (inicio, privacidad, soporte)
+        run: cp -r web/. site/
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # Mismo grupo que «Datos»: un solo despliegue a la vez.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

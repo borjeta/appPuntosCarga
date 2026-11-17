@@ -1,7 +1,11 @@
 import type { EvseStatus, SiteStatus } from './enums';
 
-/** Un estado dinámico más antiguo que esto se considera desconocido (sección 9 del prompt). */
-export const STATUS_MAX_AGE_MS = 30 * 60 * 1000;
+/**
+ * Un estado dinámico más antiguo que esto se considera desconocido (sección 9 del prompt).
+ * El workflow «Estado» lo refresca cada hora: 90 min cubren la hora entera más el retraso habitual
+ * de las tareas programadas de GitHub Actions.
+ */
+export const STATUS_MAX_AGE_MS = 90 * 60 * 1000;
 
 /** Devuelve el estado a mostrar: si el dato está caducado o no existe, UNKNOWN. */
 export function effectiveEvseStatus(
