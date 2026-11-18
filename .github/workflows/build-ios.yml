@@ -1,0 +1,72 @@
+# Compila la app iOS en un Mac de GitHub y la envía a App Store Connect.
+#
+# Para cuando se acaba el cupo de builds de iOS del plan gratuito de EAS: `eas build --local` no lo gasta y
+# los runners macOS son gratis en repositorios públicos. Usa las mismas credenciales de firma, número de build
+# (remoto, autoIncrement) y variables de producción guardadas en EAS.
+#
+# El código de la app NO está en este repo: se descarga del repo privado con una deploy key de solo lectura
+# (secreto PRIVATE_REPO_KEY) y el .ipa no se guarda como artefacto (este repo es público): se envía directo.
+# Secretos: EXPO_TOKEN (token de acceso de la cuenta borjaappsdev) y PRIVATE_REPO_KEY.
+#
+#   gh workflow run build-ios.yml --repo borjeta/appPuntosCarga -f ref=main
+
+name: Build iOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Rama, etiqueta o commit del repo privado'
+        type: string
+        default: main
+      submit:
+        description: 'Enviar a App Store Connect al terminar'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-ios
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 90
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - name: Código de la app (repo privado)
+        uses: actions/checkout@v4
+        with:
+          repository: borjeta/appPuntosCarga-privado
+          ref: ${{ inputs.ref }}
+          ssh-key: ${{ secrets.PRIVATE_REPO_KEY }}
+          persist-credentials: false
+
+      - name: Xcode más reciente
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -v -i beta | sort -V | tail -n 1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dependencias
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build:packages
+
+      - name: Compilar (eas build --local, perfil production)
+        working-directory: apps/mobile
+        run: npx -y eas-cli@latest build -p ios --profile production --local --non-interactive --output "$RUNNER_TEMP/app.ipa"
+
+      - name: Enviar a App Store Connect
+        if: inputs.submit
+        working-directory: apps/mobile
+        run: npx -y eas-cli@latest submit -p ios --profile production --path "$RUNNER_TEMP/app.ipa" --non-interactive
