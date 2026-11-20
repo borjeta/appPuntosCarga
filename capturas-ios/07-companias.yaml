@@ -1,0 +1,23 @@
+# Buscar por compañía (1.1): sugerencias por tipo al abrir el buscador y mapa filtrado por Repsol.
+appId: com.borjeta.puntoscarga
+---
+- runFlow: sub/abrir.yaml
+- tapOn: '.*Mapa.*'
+- tapOn: 'Mi ubicación'
+- runFlow: sub/pausa.yaml
+- tapOn:
+    id: 'map-search'
+# El panel de sugerencias sale en cuanto se han cargado los datos.
+- extendedWaitUntil:
+    visible: 'Buscar por compañía'
+    timeout: 60000
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 07-companias
+- inputText: 'Repsol'
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 07b-busqueda-repsol
+- tapOn:
+    id: 'search-company-repsol'
+- runFlow: sub/pausa.yaml
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 07c-mapa-repsol

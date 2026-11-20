@@ -14,6 +14,17 @@ export interface CuratedOperator {
   deeplinkTemplate?: string;
 }
 
+/**
+ * Acciona Energía (red "ACCIONA Recarga"). Web y apps comprobadas el 2026-11-19: la web oficial
+ * enlaza ambas tiendas; en la App Store la publica Corporación Acciona Energías Renovables, S.A.
+ */
+const ACCIONA: CuratedOperator = {
+  name: 'Acciona',
+  website: 'https://recarga.acciona.com',
+  appIosUrl: 'https://apps.apple.com/es/app/id1423637618',
+  appAndroidPackage: 'com.charge.and.parking',
+};
+
 export const OPERATOR_CATALOG: Record<string, CuratedOperator> = {
   'ES*ESX': { name: 'Endesa X Way' },
   'ES*IBD': { name: 'Iberdrola', website: 'https://www.iberdrola.es' },
@@ -26,7 +37,10 @@ export const OPERATOR_CATALOG: Record<string, CuratedOperator> = {
   'ES*PLE': { name: 'Plenoil' },
   'ES*PLC': { name: 'Plenoil' },
   'ES*BSM': { name: 'Endolla Barcelona (BSM)' },
-  'ES*ARE': { name: 'Acciona' },
+  'ES*ARE': ACCIONA,
+  'PT*ACC': ACCIONA,
+  // Charging Together SL: empresa conjunta de Iberdrola y bp pulse (marca "Iberdrola | bp pulse").
+  'ES*FCT': { name: 'Iberdrola | bp pulse' },
   'ES*EMA': { name: 'EMAYA' },
   'ES*DLP': { name: 'Galp' },
   'ES*ZUN': { name: 'Zunder', website: 'https://zunder.com' },

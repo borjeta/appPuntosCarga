@@ -14,7 +14,7 @@ import {
 } from '../datex2/site';
 import { downloadToCache, readText } from '../download';
 import { parseDatexPeriods } from '../normalize/hours';
-import { operatorDisplayName } from '../normalize/operators';
+import { OPERATOR_CATALOG, operatorDisplayName } from '../normalize/operators';
 import { looksLikeCode, smartTitleCase, tidyStreet } from '../normalize/text';
 import { streamElements } from '../xml/stream';
 import { datexEvses, partyIdFromEvseId, validCoordinates } from './common';
@@ -59,7 +59,7 @@ export function normalizePortugueseSite(sourceId: string, d: DatexSite): Normali
           legalName: d.operator?.name ?? null,
           displayName: operatorDisplayName(partyId, d.operator?.name ?? null),
           countryCode: 'PT',
-          website: d.operator?.website ?? null,
+          website: OPERATOR_CATALOG[partyId]?.website ?? d.operator?.website ?? null,
           phone: d.operator?.phone ?? null,
         }
       : null,

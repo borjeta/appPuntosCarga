@@ -1,3 +1,4 @@
+import { COMPANY_IDS } from './companies';
 import {
   CONNECTOR_GROUP_KEYS,
   PAYMENT_METHODS,
@@ -13,7 +14,12 @@ import {
 export interface SiteFilters {
   connectorGroups?: ConnectorGroup[];
   minPowerKw?: number;
+  /**
+   * Quién opera la estación. `operatorIds` (códigos concretos) y `companies` (ver companies.ts) se
+   * suman: pasa la estación si su operador está en la lista O pertenece a una de las compañías.
+   */
   operatorIds?: string[];
+  companies?: string[];
   paymentMethods?: PaymentMethod[];
   onlyAvailable?: boolean;
   open24h?: boolean;
@@ -56,6 +62,9 @@ export function parseFilters(query: QueryLike): SiteFilters {
   const operators = listValue(query.operators).filter((o) => o.length <= 64);
   if (operators.length) filters.operatorIds = [...new Set(operators)].slice(0, 50);
 
+  const companies = listValue(query.companies).filter((c) => COMPANY_IDS.includes(c));
+  if (companies.length) filters.companies = [...new Set(companies)];
+
   const payments = listValue(query.payment).filter((p): p is PaymentMethod =>
     isOneOf(PAYMENT_METHODS, p),
   );
@@ -74,6 +83,7 @@ export function filtersToQuery(filters: SiteFilters): Record<string, string> {
     out.connectors = [...filters.connectorGroups].sort().join(',');
   if (filters.minPowerKw) out.minPowerKw = String(filters.minPowerKw);
   if (filters.operatorIds?.length) out.operators = [...filters.operatorIds].sort().join(',');
+  if (filters.companies?.length) out.companies = [...filters.companies].sort().join(',');
   if (filters.paymentMethods?.length) out.payment = [...filters.paymentMethods].sort().join(',');
   if (filters.onlyAvailable) out.onlyAvailable = 'true';
   if (filters.open24h) out.open24h = 'true';
@@ -85,6 +95,7 @@ export function countActiveFilters(filters: SiteFilters): number {
     (filters.connectorGroups?.length ? 1 : 0) +
     (filters.minPowerKw ? 1 : 0) +
     (filters.operatorIds?.length ? 1 : 0) +
+    (filters.companies?.length ? 1 : 0) +
     (filters.paymentMethods?.length ? 1 : 0) +
     (filters.onlyAvailable ? 1 : 0) +
     (filters.open24h ? 1 : 0)

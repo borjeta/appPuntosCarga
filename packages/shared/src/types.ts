@@ -1,3 +1,4 @@
+import type { CompanyListItem } from './companies';
 import type {
   ConnectorFormat,
   ConnectorStandard,
@@ -160,6 +161,8 @@ export interface NearbyResponse {
 export interface SearchResponse {
   locations: NearbySite[];
   operators: Array<{ id: string; name: string; siteCount: number }>;
+  /** Compañías (eléctricas, petroleras, redes) que encajan con la búsqueda. Ver companies.ts. */
+  companies: CompanyListItem[];
 }
 
 export interface OperatorListItem {

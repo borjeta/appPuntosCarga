@@ -1,7 +1,18 @@
 appId: com.borjeta.puntoscarga
 ---
 - runFlow: sub/abrir.yaml
-- tapOn: ".*Mapa.*"
-- tapOn: ".*Filtros.*"
+- tapOn: '.*Mapa.*'
+- tapOn: '.*Filtros.*'
 - runFlow: sub/pausa.yaml
 - takeScreenshot: 05-filtros
+# Sección «Compañía» (1.1), más abajo.
+- scrollUntilVisible:
+    element: 'Compañía'
+    direction: DOWN
+    timeout: 20000
+# Sube un poco más para que la sección quede entera a la vista.
+- swipe:
+    start: '50%, 70%'
+    end: '50%, 35%'
+- runFlow: sub/pausa.yaml
+- takeScreenshot: 05b-filtros-compania

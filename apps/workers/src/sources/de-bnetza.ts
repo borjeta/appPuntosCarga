@@ -4,7 +4,7 @@ import { buildOpeningHours } from '../normalize/hours';
 import { operatorDisplayName } from '../normalize/operators';
 import { comparableName, normalizeEvseId, smartTitleCase, tidyStreet } from '../normalize/text';
 import { partyIdFromEvseId, validCoordinates } from './common';
-import { csvRows, parseDecimal } from './csv';
+import { csvRows, detectCsvEncoding, parseDecimal } from './csv';
 import type { NormalizedConnector, NormalizedEvse, NormalizedSite, SourceAdapter } from './types';
 
 /**
@@ -195,7 +195,9 @@ export function groupDeRows(rows: Row[], sourceId: string): NormalizedSite[] {
 export async function readDeRows(file: string): Promise<Row[]> {
   const rows: Row[] = [];
   let header: string[] | null = null;
-  for await (const cells of csvRows(file, ';')) {
+  // Se ha publicado tanto en UTF-8 (con BOM) como en Latin-1: se detecta en cada descarga.
+  const encoding = await detectCsvEncoding(file);
+  for await (const cells of csvRows(file, ';', encoding)) {
     if (!header) {
       // Las primeras líneas son avisos y una fila de grupos: la cabecera empieza por el id.
       if (cells[0]?.trim() === 'Ladeeinrichtungs-ID') header = cells.map((c) => c.trim());

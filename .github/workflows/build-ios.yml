@@ -8,7 +8,13 @@
 # (secreto PRIVATE_REPO_KEY) y el .ipa no se guarda como artefacto (este repo es público): se envía directo.
 # Secretos: EXPO_TOKEN (token de acceso de la cuenta borjaappsdev) y PRIVATE_REPO_KEY.
 #
+# Con `capturas=true`, en la MISMA ejecución y en paralelo (otro Mac), compila también la app para
+# simulador (perfil `simulator`, sin anuncios) y saca las capturas de la App Store con los flujos de
+# Maestro de `capturas-ios/` del repo privado. Si falla, no afecta a la build de la tienda. El artefacto
+# solo lleva las imágenes y el log de Maestro (nunca la app) y caduca a 1 día.
+#
 #   gh workflow run build-ios.yml --repo borjeta/appPuntosCarga -f ref=main
+#   gh workflow run build-ios.yml --repo borjeta/appPuntosCarga -f ref=main -f capturas=true
 
 name: Build iOS
 
@@ -16,13 +22,21 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: 'Rama, etiqueta o commit del repo privado'
+        description: "Rama, etiqueta o commit del repo privado"
         type: string
         default: main
       submit:
-        description: 'Enviar a App Store Connect al terminar'
+        description: "Enviar a App Store Connect al terminar"
         type: boolean
         default: true
+      capturas:
+        description: "Sacar también las capturas en un simulador (en paralelo)"
+        type: boolean
+        default: false
+      flows:
+        description: "Flujos de Maestro para las capturas (patrón dentro de capturas-ios/)"
+        type: string
+        default: "0[1-47]*.yaml"
 
 permissions:
   contents: read
@@ -70,3 +84,99 @@ jobs:
         if: inputs.submit
         working-directory: apps/mobile
         run: npx -y eas-cli@latest submit -p ios --profile production --path "$RUNNER_TEMP/app.ipa" --non-interactive
+
+  capturas:
+    if: inputs.capturas
+    runs-on: macos-latest
+    timeout-minutes: 90
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      FLOWS: ${{ inputs.flows }}
+    steps:
+      - name: Código de la app (repo privado)
+        uses: actions/checkout@v4
+        with:
+          repository: borjeta/appPuntosCarga-privado
+          ref: ${{ inputs.ref }}
+          ssh-key: ${{ secrets.PRIVATE_REPO_KEY }}
+          persist-credentials: false
+
+      - name: Xcode más reciente
+        run: |
+          XCODE=$(ls -d /Applications/Xcode_*.app | grep -v -i beta | sort -V | tail -n 1)
+          sudo xcode-select -s "$XCODE"
+          xcodebuild -version
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Dependencias
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build:packages
+
+      - name: Compilar para simulador (eas build --local, perfil simulator)
+        working-directory: apps/mobile
+        run: npx -y eas-cli@latest build -p ios --profile simulator --local --non-interactive --output "$RUNNER_TEMP/app-sim.tar.gz"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Instalar Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Crear y arrancar el simulador (iPhone Pro Max, español, Madrid)
+        run: |
+          RUNTIME=$(xcrun simctl list runtimes -j | jq -r '[.runtimes[] | select(.platform=="iOS" and .isAvailable)] | last | .identifier')
+          DEVTYPE=$(xcrun simctl list devicetypes -j | jq -r '[.devicetypes[] | select(.name=="iPhone 17 Pro Max" or .name=="iPhone 16 Pro Max")] | last | .identifier')
+          echo "Runtime: $RUNTIME · Dispositivo: $DEVTYPE"
+          UDID=$(xcrun simctl create capturas "$DEVTYPE" "$RUNTIME")
+          echo "UDID=$UDID" >> "$GITHUB_ENV"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          # Idioma y región en español; hay que reiniciar para que se apliquen.
+          xcrun simctl spawn "$UDID" defaults write NSGlobalDomain AppleLanguages -array es
+          xcrun simctl spawn "$UDID" defaults write NSGlobalDomain AppleLocale -string es_ES
+          xcrun simctl shutdown "$UDID"
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl location "$UDID" set 40.4168,-3.7038
+          # Barra de estado limpia, como en las capturas de Apple.
+          xcrun simctl status_bar "$UDID" override --time 9:41 --batteryState charged --batteryLevel 100 \
+            --cellularMode active --cellularBars 4 --wifiBars 3 --operatorName ""
+
+      - name: Instalar la app en el simulador
+        run: |
+          mkdir -p "$RUNNER_TEMP/sim"
+          tar -xzf "$RUNNER_TEMP/app-sim.tar.gz" -C "$RUNNER_TEMP/sim"
+          APP=$(find "$RUNNER_TEMP/sim" -maxdepth 3 -name '*.app' | head -n 1)
+          echo "Instalando $APP"
+          xcrun simctl install "$UDID" "$APP"
+
+      - name: Ejecutar los flujos de Maestro
+        run: |
+          mkdir -p out
+          cd out
+          for f in ../capturas-ios/$FLOWS; do
+            n=$(basename "$f" .yaml)
+            echo "::group::$n"
+            maestro --device "$UDID" test --debug-output "debug-$n" --flatten-debug-output "$f" || echo "::warning::Falló el flujo $n"
+            echo "::endgroup::"
+          done
+
+      # Solo imágenes y log de Maestro (sin la app, sin logs del simulador ni jerarquías de pantalla).
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: capturas-ios
+          path: |
+            out/**/takeScreenshot/*.png
+            out/**/maestro.log
+          retention-days: 1
+          if-no-files-found: warn

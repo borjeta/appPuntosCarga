@@ -1,6 +1,9 @@
 import {
+  aggregateCompanies,
+  companiesOfOperator,
   CONNECTOR_GROUP_KEYS,
   effectiveEvseStatus,
+  matchCompanies,
   expandBBox,
   haversineMeters,
   indexPolyline,
@@ -9,6 +12,7 @@ import {
   STATUS_MAX_AGE_MS,
   summarizeSiteStatus,
   type BBox,
+  type CompanyListItem,
   type ConnectorStandard,
   type EvseStatus,
   type LocationDetail,
@@ -53,6 +57,8 @@ export interface StationSummary {
   cc: string;
   operatorId: string | null;
   operatorName: string | null;
+  /** Compañías (companies.ts) a las que pertenece su operador. */
+  companies: readonly string[];
   maxPowerKw: number;
   dcKw: number;
   acKw: number;
@@ -144,11 +150,23 @@ export class StationIndex {
     { name: string; count: number; cc: Set<string> }
   >();
   private status = new Map<string, { status: EvseStatus; at: string }>();
+  private readonly companyList: CompanyListItem[];
 
   constructor(
     indexes: CountryIndexFile[],
     private readonly sources: SourceInfo[] = [],
   ) {
+    const NONE: readonly string[] = [];
+    const companiesByOperator = new Map<string, readonly string[]>();
+    const companiesOf = (id: string, name: string): readonly string[] => {
+      let list = companiesByOperator.get(id);
+      if (!list) {
+        const found = companiesOfOperator(id, name);
+        list = found.length ? found : NONE;
+        companiesByOperator.set(id, list);
+      }
+      return list;
+    };
     for (const idx of indexes) {
       for (const row of idx.rows) {
         const [
@@ -177,6 +195,7 @@ export class StationIndex {
           cc: idx.cc,
           operatorId: opEntry?.[0] ?? null,
           operatorName: opEntry?.[1] ?? null,
+          companies: opEntry ? companiesOf(opEntry[0], opEntry[1]) : NONE,
           maxPowerKw: maxKw,
           dcKw,
           acKw,
@@ -209,6 +228,7 @@ export class StationIndex {
         }
       }
     }
+    this.companyList = aggregateCompanies(this.operators(null));
   }
 
   get size(): number {
@@ -303,7 +323,8 @@ export class StationIndex {
 
   search(q: string, lat: number | null, lng: number | null, now = new Date()): SearchResponse {
     const words = normalizeText(q).split(/\s+/).filter(Boolean).slice(0, 6);
-    if (!words.length || words.join('').length < 2) return { locations: [], operators: [] };
+    if (!words.length || words.join('').length < 2)
+      return { locations: [], operators: [], companies: [] };
     const res = words.map((w) => new RegExp(`(^|\\s)${escapeRegExp(w)}`));
     const scored: Array<{ s: StationSummary; score: number; d: number }> = [];
     for (const s of this.stations) {
@@ -313,8 +334,12 @@ export class StationIndex {
       scored.push({ s, score, d });
     }
     scored.sort((a, b) => b.score - a.score || a.d - b.d);
+    const companies = matchCompanies(this.companyList, q);
+    // Los operadores que ya están dentro de una compañía encontrada no se repiten.
+    const covered = new Set(companies.flatMap((c) => c.operatorIds));
     const operators = [...this.operatorCounts.entries()]
-      .filter(([, o]) => {
+      .filter(([id, o]) => {
+        if (covered.has(id)) return false;
         const name = normalizeText(o.name);
         return words.every((w) => name.includes(w));
       })
@@ -324,7 +349,13 @@ export class StationIndex {
     return {
       locations: scored.slice(0, 25).map(({ s, d }) => this.toNearby(s, d, now)),
       operators,
+      companies,
     };
+  }
+
+  /** Compañías con estaciones en los países descargados, de más a menos estaciones. */
+  companies(): CompanyListItem[] {
+    return this.companyList;
   }
 
   operators(countryCode: string | null): OperatorListItem[] {
@@ -475,10 +506,17 @@ export class StationIndex {
   private query(bbox: BBox, f: SiteFilters, now: Date): StationSummary[] {
     const groupBits = (f.connectorGroups ?? []).reduce((m, g) => m | (GROUP_BIT.get(g) ?? 0), 0);
     const payBits = (f.paymentMethods ?? []).reduce((m, p) => m | (PAYMENT_BIT.get(p) ?? 0), 0);
+    const ops = f.operatorIds?.length ? f.operatorIds : null;
+    const comps = f.companies?.length ? f.companies : null;
     return this.inBBox(bbox).filter((s) => {
       if (groupBits && !(s.groups & groupBits)) return false;
       if (f.minPowerKw && s.maxPowerKw < f.minPowerKw) return false;
-      if (f.operatorIds?.length && !(s.operatorId && f.operatorIds.includes(s.operatorId)))
+      // Operadores y compañías se suman: basta con cumplir uno de los dos.
+      if (
+        (ops || comps) &&
+        !(ops && s.operatorId && ops.includes(s.operatorId)) &&
+        !(comps && s.companies.some((c) => comps.includes(c)))
+      )
         return false;
       if (payBits && !(s.payments & payBits)) return false;
       if (f.open24h && !s.h24) return false;
